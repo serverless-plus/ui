@@ -1,6 +1,7 @@
 node_modules
 *.map
 tsconfig.tsbuildinfo
+tsconfig.json
 tests
 test
 __tests__
@@ -18,4 +19,3 @@ commitlint.config.js
 
 # source code
 /src
-

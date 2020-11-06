@@ -1,7 +1,7 @@
 import { execSync } from 'child_process';
 import { join } from 'path';
-import rimraf from 'rimraf';
 import ora from 'ora';
+import shell from 'shelljs';
 
 async function build() {
   const bar = ora().start('Building');
@@ -9,8 +9,8 @@ async function build() {
   const serverDist = join(__dirname, '..', 'dist');
   const buildInfo = join(__dirname, '..', 'tsconfig.tsbuildinfo');
   bar.info('Building server');
-  rimraf.sync(serverDist);
-  rimraf.sync(buildInfo);
+  shell.rm('-rf', serverDist);
+  shell.rm('-rf', buildInfo);
   execSync('npm run compile', {
     cwd: process.cwd(),
   });
@@ -21,6 +21,7 @@ async function build() {
   execSync('npm run build', {
     cwd: clientPath,
   });
+  shell.cp('-R', 'client/build', 'dist/views');
 
   bar.succeed('Build success');
 }

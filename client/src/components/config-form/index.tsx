@@ -73,7 +73,7 @@ const ConfigForm = (props: ConfigFormProps) => {
 
     setCode(yamlCode);
     if (typeof onSubmit === 'function') {
-      await onSubmit(code);
+      await onSubmit(yamlCode);
     }
   };
 

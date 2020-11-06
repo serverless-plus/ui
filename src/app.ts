@@ -14,7 +14,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, '..', 'client/build'), { maxAge: 31557600000 }));
+app.use(express.static(path.join(__dirname, 'views'), { maxAge: 31557600000 }));
 
 // Define Routes
 initRoutes(app);
