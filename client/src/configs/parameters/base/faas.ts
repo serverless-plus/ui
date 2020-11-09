@@ -1,4 +1,6 @@
-const FAAS_CONFIG = {
+import { deepClone } from '@/utils';
+
+const BASE_FAAS_CONFIG = {
   type: 'object',
   label: 'Faas Options',
   divider: true,
@@ -60,4 +62,12 @@ const FAAS_CONFIG = {
   },
 };
 
-export { FAAS_CONFIG };
+const FAAS_CONFIG = deepClone(BASE_FAAS_CONFIG);
+FAAS_CONFIG.keys.triggers = {
+  type: 'array',
+  label: 'Trigger List',
+  ui: 'TriggerInputs',
+  default: [],
+};
+
+export { BASE_FAAS_CONFIG, FAAS_CONFIG };

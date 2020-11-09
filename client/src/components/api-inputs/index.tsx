@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Tooltip, Form, Space, Input, Button, Modal, Select } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { InfoCircleOutlined, DeleteOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons';
-import ApiForm from '../api-form';
-import { API_METHODS } from '../../configs/base/apigw';
+import ApiForm from '@/components/api-form';
+import { API_METHODS } from '@/configs/parameters/base/apigw';
 
 type ApiInputsProps = {
   name: string;
@@ -58,7 +58,7 @@ const ApiInputs = (props: ApiInputsProps) => {
       <Form.List name={name}>
         {(fields, { add, remove }) => (
           <>
-            {fields.map((field) => (
+            {fields.map(field => (
               <Space key={field.key} style={{ display: 'flex', marginBottom: 5 }} align="baseline">
                 <Form.Item
                   className="form-list-item"

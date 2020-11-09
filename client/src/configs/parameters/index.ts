@@ -13,6 +13,7 @@ const COMPONENTS = {
   name: {
     type: 'string',
     label: 'Name',
+    required: true,
     description: 'Instance name',
     ui: 'Input',
   },

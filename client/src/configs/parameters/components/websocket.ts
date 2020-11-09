@@ -1,5 +1,5 @@
-import { FAAS_CONFIG } from '../base/faas';
-import { APIGW_CONFIG } from '../base/apigw';
+import { BASE_FAAS_CONFIG } from '../base/faas';
+import { BASE_APIGW_CONFIG } from '../base/apigw';
 
 const websocket = {
   inputs: {
@@ -26,8 +26,8 @@ const websocket = {
         default: 'ap-guangzhou',
         allows: ['ap-guangzhou', 'ap-beijing', 'ap-shanghai'],
       },
-      faas: FAAS_CONFIG,
-      apigw: APIGW_CONFIG,
+      faas: BASE_FAAS_CONFIG,
+      apigw: BASE_APIGW_CONFIG,
     },
   },
 };

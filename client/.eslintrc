@@ -1,0 +1,6 @@
+{
+  "extends": "eslint-config-umi",
+  "rules": {
+    "jsx-a11y/anchor-has-content": "off"
+  }
+}

@@ -1,4 +1,6 @@
-const APIGW_CONFIG = {
+import { deepClone } from '@/utils';
+
+const BASE_APIGW_CONFIG = {
   type: 'object',
   label: 'API Gateway Options',
   divider: true,
@@ -7,6 +9,7 @@ const APIGW_CONFIG = {
       type: 'string',
       label: 'Service Name',
       ui: 'Input',
+      required: true,
       regex: /^[a-zA-Z][a-zA-Z0-9(_)]{0,48}[a-zA-Z0-9]?$/g,
     },
     protocols: {
@@ -23,13 +26,15 @@ const APIGW_CONFIG = {
       default: 'release',
       allows: ['release', 'prepub', 'test'],
     },
-    apis: {
-      type: 'array',
-      label: 'API List',
-      ui: 'ApiInputs',
-      default: [],
-    },
   },
+};
+
+const APIGW_CONFIG = deepClone(BASE_APIGW_CONFIG);
+APIGW_CONFIG.keys.apis = {
+  type: 'array',
+  label: 'API List',
+  ui: 'ApiInputs',
+  default: [],
 };
 
 const API_METHODS = ['ANY', 'GET', 'POST'];
@@ -57,4 +62,4 @@ const API_CONFIG = {
   },
 };
 
-export { API_CONFIG, APIGW_CONFIG, API_METHODS };
+export { BASE_APIGW_CONFIG, API_CONFIG, APIGW_CONFIG, API_METHODS };

@@ -7,10 +7,17 @@ export interface AnyObject {
   [propName: string]: any;
 }
 
-function renderConfigs(params: AnyObject, form: FormInstance, prefix?: string) {
+export interface RenderConfigOptions {
+  parameters: AnyObject;
+  form: FormInstance;
+  prefix?: string;
+  hideOptional?: boolean;
+}
+
+function renderConfigs({ parameters, form, prefix, hideOptional = false }: RenderConfigOptions) {
   let comp: JSX.Element[] = [];
 
-  Object.entries(params).forEach(([key, val]) => {
+  Object.entries(parameters).forEach(([key, val]) => {
     const newKey = prefix ? `${prefix}.${key}` : key;
     if (val.type === 'object') {
       if (val.label && val.divider) {
@@ -20,10 +27,13 @@ function renderConfigs(params: AnyObject, form: FormInstance, prefix?: string) {
           </Divider>,
         );
       }
-      const subComps = renderConfigs(val.keys, form, newKey);
+
+      const subComps = renderConfigs({ parameters: val.keys, form, prefix: newKey, hideOptional });
       comp.push(...subComps);
     } else {
-      comp.push(<FormItem {...val} name={newKey} key={newKey} form={form} />);
+      if (!hideOptional || val.required === true) {
+        comp.push(<FormItem {...val} name={newKey} key={newKey} form={form} />);
+      }
     }
   });
 

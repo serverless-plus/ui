@@ -8,7 +8,6 @@
   },
   "scripts": {
     "bootstrap": "ts-node ./scripts/bootstrap.ts",
-    "dev": "npm run start:server && npm run start:client",
     "start:server": "NODE_ENV=development ts-node src/start.ts",
     "start:client": "cd client && npm run start",
     "start": "NODE_ENV=production node dist/start.js",
@@ -60,6 +59,7 @@
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "hotkeys-js": "^3.8.1",
     "js-yaml": "^3.14.0",
     "open": "^7.3.0",
     "tslib": "^2.0.1"

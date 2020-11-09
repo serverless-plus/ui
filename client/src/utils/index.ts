@@ -75,7 +75,7 @@ const flatConfig = (obj: AnyObject) => {
   Object.entries(obj).forEach(([key, val]) => {
     if (typeOf(val) === 'Object') {
       const keyVals = objectToDotProp(key, val);
-      keyVals.forEach((item) => {
+      keyVals.forEach(item => {
         newObj[item.key] = item.val;
       });
     } else {

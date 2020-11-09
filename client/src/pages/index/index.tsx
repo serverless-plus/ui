@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { Layout, Alert, notification } from 'antd';
 import { useMount } from 'react-use';
 
-import { ConfigForm } from '../../components/config-form';
-import { getConfig, postConfig } from '../../apis';
-import { DEFAULT_CONFIG } from '../../configs';
-import { flatConfig } from '../../utils';
+import { ConfigForm } from '@/components/config-form';
+import { getConfig, postConfig } from '@/apis';
+import { DEFAULT_CONFIG } from '@/configs/parameters';
+import { flatConfig } from '@/utils';
 
-import './index.less';
+import styles from './index.less';
 
 const { Header, Footer, Content } = Layout;
 
@@ -48,17 +48,17 @@ function App() {
 
   return (
     <Layout>
-      <Header className="page-header">Severless Plus UI</Header>
+      <Header className={styles.header}>Severless Plus UI</Header>
       <Content>
         <ConfigForm
           onSubmit={onSubmit}
-          className="config-form"
+          className={styles.configForm}
           initYaml={yamlCode}
           initJs={jsCode}
           initCompName={jsCode.component}
         />
       </Content>
-      <Footer className="page-footer">
+      <Footer className={styles.footer}>
         <a target="_blank" rel="noopener noreferrer" href="https://github.com/serverless-plus">
           @Serverless Plus
         </a>
