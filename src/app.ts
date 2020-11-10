@@ -8,7 +8,6 @@ import { initRoutes } from './routes';
 const app: Application = express();
 
 // Express configuration
-app.set('port', process.env.PORT || 3000);
 app.use(compression());
 app.use(cors());
 app.use(express.json());
