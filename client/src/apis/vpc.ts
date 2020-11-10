@@ -17,13 +17,13 @@ interface GetResponse {
 }
 
 const getVpcList = async ({ region }: GetVpcRequest) => {
-  const res = await request.get(`/vpc?region=${region}`);
+  const res = await request.get(`vpc?region=${region}`);
   console.log(res.data);
   return res.data as GetResponse;
 };
 
 const getSubnetList = async ({ region, vpcId }: GetSubnetRequest) => {
-  const res = await request.get(`/subnet?region=${region}&vpcId=${vpcId}`);
+  const res = await request.get(`subnet?region=${region}&vpcId=${vpcId}`);
   console.log(res.data);
   return res.data as GetResponse;
 };
