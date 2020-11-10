@@ -11,7 +11,7 @@ const framework = {
       framework: {
         type: 'string',
         ui: 'Select',
-        label: 'Web Framework',
+        label: 'framework.framework',
         default: 'express',
         allows: ['express', 'koa', 'egg', 'next', 'nuxt'],
       },
@@ -21,7 +21,7 @@ const framework = {
           src: {
             required: true,
             type: 'string',
-            label: 'Code Path',
+            label: 'app.src.src',
             ui: 'Input',
           },
         },
@@ -29,8 +29,12 @@ const framework = {
       region: {
         type: 'string',
         ui: 'Select',
-        label: 'Region',
+        label: 'app.region',
         default: 'ap-guangzhou',
+        action: {
+          type: 'REGION_CHANGE',
+          key: 'region',
+        },
         allows: ['ap-guangzhou', 'ap-beijing', 'ap-shanghai'],
       },
       faas: BASE_FAAS_CONFIG,

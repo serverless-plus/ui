@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { Tooltip, Form, Space, Input, Button, Modal, Select } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { InfoCircleOutlined, DeleteOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons';
 import ApiForm from '@/components/api-form';
-import { API_METHODS } from '@/configs/parameters/base/apigw';
+import { API_METHODS } from '@/configs/base/apigw';
 
 type ApiInputsProps = {
   name: string;
-  label?: string;
+  label?: string | ReactNode;
   form: FormInstance;
 };
 

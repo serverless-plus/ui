@@ -21,7 +21,7 @@ async function build() {
   execSync('npm run build', {
     cwd: clientPath,
   });
-  shell.cp('-R', 'client/build', 'dist/views');
+  shell.cp('-R', 'client/dist', 'dist/views');
 
   bar.succeed('Build success');
 }

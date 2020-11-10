@@ -1,12 +1,16 @@
 import React from 'react';
 import { Select, Input, Form, Radio, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
-
+import { FormattedMessage } from 'umi';
 import { Rule } from 'rc-field-form/es/interface';
-import FileInput from './file-input';
+import { connect, Dispatch } from 'umi';
+import { ConnectState } from '@/models/connect';
+import { FormInstance } from 'antd/lib/form';
+
 import EnvInputs from './env-inputs';
 import ApiInputs from './api-inputs';
-import { FormInstance } from 'antd/lib/form';
+import VpcSelect from './vpc-select';
+import { AnyObject } from './render-utils';
 
 type FormItemProps = {
   type: string;
@@ -20,6 +24,9 @@ type FormItemProps = {
   disabled?: boolean;
   default: string | string[] | number | number[];
   form: FormInstance;
+  action?: { type: string; key: string };
+  onChange: (v: any, field: string) => void;
+  dispatch?: Dispatch;
 };
 
 const FormItem = (props: FormItemProps) => {
@@ -35,7 +42,24 @@ const FormItem = (props: FormItemProps) => {
     required = false,
     disabled = false,
     form,
+    action,
+    onChange,
+    dispatch,
   } = props;
+  const fieldItemChange = (v: any) => {
+    // you can config `action` field for config parameter to dispatch global state
+    if (action && dispatch) {
+      const payload: AnyObject = {};
+      payload[name] = v;
+      dispatch({
+        type: `global/${action.type}`,
+        payload,
+      });
+    }
+    if (onChange && typeof onChange === 'function') {
+      onChange(v, name);
+    }
+  };
   const rules = [];
   if (required) {
     rules.push({
@@ -54,12 +78,15 @@ const FormItem = (props: FormItemProps) => {
   switch (ui) {
     case 'Input':
       component = (
-        <Form.Item name={name} label={label} rules={rules}>
+        <Form.Item name={name} label={<FormattedMessage id={label} />} rules={rules}>
           <Input
             disabled={disabled}
+            onChange={e => {
+              fieldItemChange(e.target.value);
+            }}
             suffix={
               description ? (
-                <Tooltip title={description}>
+                <Tooltip title={<FormattedMessage id={description} />}>
                   <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
                 </Tooltip>
               ) : null
@@ -68,19 +95,16 @@ const FormItem = (props: FormItemProps) => {
         </Form.Item>
       );
       break;
-    case 'FileInput':
-      component = (
-        <Form.Item name={name} label={label} rules={rules}>
-          {/* @tslint-ignore */}
-          <FileInput />
-        </Form.Item>
-      );
-      break;
     case 'Select':
       component = (
-        <Form.Item name={name} label={label}>
-          <Select disabled={disabled}>
-            {allows.map((item) => (
+        <Form.Item name={name} label={<FormattedMessage id={label} />} rules={rules}>
+          <Select
+            disabled={disabled}
+            onChange={v => {
+              fieldItemChange(v);
+            }}
+          >
+            {allows.map(item => (
               <Select.Option value={item} key={item}>
                 {item}
               </Select.Option>
@@ -91,9 +115,13 @@ const FormItem = (props: FormItemProps) => {
       break;
     case 'Radio':
       component = (
-        <Form.Item name={name} label={label}>
-          <Radio.Group>
-            {allows.map((item) => (
+        <Form.Item name={name} label={<FormattedMessage id={label} />}>
+          <Radio.Group
+            onChange={e => {
+              fieldItemChange(e.target.value);
+            }}
+          >
+            {allows.map(item => (
               <Radio value={item} key={item}>
                 {String(item)}
               </Radio>
@@ -104,9 +132,15 @@ const FormItem = (props: FormItemProps) => {
       break;
     case 'MultiSelect':
       component = (
-        <Form.Item name={name} label={label}>
-          <Select mode="multiple" disabled={disabled}>
-            {allows.map((item) => (
+        <Form.Item name={name} label={<FormattedMessage id={label} />}>
+          <Select
+            mode="multiple"
+            disabled={disabled}
+            onChange={v => {
+              fieldItemChange(v);
+            }}
+          >
+            {allows.map(item => (
               <Select.Option value={item} key={item}>
                 {item}
               </Select.Option>
@@ -116,15 +150,30 @@ const FormItem = (props: FormItemProps) => {
       );
       break;
     case 'EnvInputs':
-      component = <EnvInputs name={name} label={label} />;
+      component = <EnvInputs name={name} label={<FormattedMessage id={label} />} />;
       break;
     case 'ApiInputs':
-      component = <ApiInputs name={name} label={label} form={form} />;
+      component = <ApiInputs name={name} label={<FormattedMessage id={label} />} form={form} />;
+      break;
+    case 'VpcSelect':
+      component = (
+        <VpcSelect
+          name={name}
+          label={<FormattedMessage id={label} />}
+          form={form}
+          onChange={onChange}
+        />
+      );
       break;
     default:
       component = (
-        <Form.Item name={name} label={label}>
-          <Input disabled={disabled} />
+        <Form.Item name={name} label={<FormattedMessage id={label} />}>
+          <Input
+            disabled={disabled}
+            onChange={e => {
+              fieldItemChange(e.target.value);
+            }}
+          />
         </Form.Item>
       );
   }
@@ -132,4 +181,6 @@ const FormItem = (props: FormItemProps) => {
   return component;
 };
 
-export { FormItem };
+export default connect(({ global }: ConnectState) => ({
+  region: global.region,
+}))(FormItem);

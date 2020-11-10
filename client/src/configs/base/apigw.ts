@@ -2,26 +2,26 @@ import { deepClone } from '@/utils';
 
 const BASE_APIGW_CONFIG = {
   type: 'object',
-  label: 'API Gateway Options',
+  label: 'apigw.options',
   divider: true,
   keys: {
     name: {
       type: 'string',
-      label: 'Service Name',
+      label: 'apigw.name',
       ui: 'Input',
       required: true,
       regex: /^[a-zA-Z][a-zA-Z0-9(_)]{0,48}[a-zA-Z0-9]?$/g,
     },
     protocols: {
       type: 'array',
-      label: 'Protocols',
+      label: 'apigw.protocols',
       ui: 'MultiSelect',
       default: ['http'],
       allows: ['http', 'https'],
     },
     environment: {
       type: 'string',
-      label: 'Environment',
+      label: 'apigw.environment',
       ui: 'Select',
       default: 'release',
       allows: ['release', 'prepub', 'test'],
@@ -32,7 +32,7 @@ const BASE_APIGW_CONFIG = {
 const APIGW_CONFIG = deepClone(BASE_APIGW_CONFIG);
 APIGW_CONFIG.keys.apis = {
   type: 'array',
-  label: 'API List',
+  label: 'apigw.apiList',
   ui: 'ApiInputs',
   default: [],
 };
@@ -42,21 +42,21 @@ const API_METHODS = ['ANY', 'GET', 'POST'];
 const API_CONFIG = {
   path: {
     type: 'string',
-    label: 'Path',
+    label: 'apigw.api.path',
     default: '/',
     ui: 'Input',
     required: true,
   },
   method: {
     type: 'string',
-    label: 'Method',
+    label: 'apigw.api.method',
     ui: 'Select',
     required: true,
     allows: API_METHODS,
   },
   enableCORS: {
     type: 'boolean',
-    label: 'CORS',
+    label: 'apigw.api.cors',
     ui: 'Radio',
     allows: [true, false],
   },

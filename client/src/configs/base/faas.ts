@@ -2,20 +2,19 @@ import { deepClone } from '@/utils';
 
 const BASE_FAAS_CONFIG = {
   type: 'object',
-  label: 'Faas Options',
+  label: 'faas.options',
   divider: true,
   keys: {
     name: {
       required: true,
       type: 'string',
-      label: 'Faas Name',
+      label: 'faas.name',
       ui: 'Input',
       regex: /^[A-Za-z][\w-]{0,58}[A-Za-z0-9]$/g,
     },
     runtime: {
-      required: true,
       type: 'string',
-      label: 'Runtime',
+      label: 'faas.runtime',
       ui: 'Select',
       default: 'Nodejs10.15',
       allows: ['Nodejs12.16', 'Nodejs10.15', 'Nodejs8.9', 'Nodejs6.10'],
@@ -23,7 +22,7 @@ const BASE_FAAS_CONFIG = {
     memorySize: {
       type: 'number',
       ui: 'Select',
-      label: 'Memory Size',
+      label: 'faas.memorySize',
       default: 128,
       allows: [
         64,
@@ -55,9 +54,15 @@ const BASE_FAAS_CONFIG = {
     },
     environment: {
       type: 'array',
-      label: 'Environment',
+      label: 'faas.environments',
       ui: 'EnvInputs',
       default: [],
+    },
+    vpc: {
+      type: 'vpc',
+      label: 'faas.vpc',
+      ui: 'VpcSelect',
+      default: {},
     },
   },
 };

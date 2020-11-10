@@ -1,14 +1,5 @@
-import axios from 'axios';
+import { request } from './request';
 import { GetConfigResponse, PostConfigResponse } from '../typings';
-
-const BASE_URL = 'http://localhost:3000';
-
-const request = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
 
 const getConfig = async (): Promise<GetConfigResponse> => {
   const res = await request.get(`/init`);

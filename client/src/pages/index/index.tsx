@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Layout, Alert, notification } from 'antd';
+import { Layout, Alert, Switch, Tooltip, notification } from 'antd';
 import { useMount } from 'react-use';
+import { FormattedMessage, SelectLang } from 'umi';
 
 import { ConfigForm } from '@/components/config-form';
 import { getConfig, postConfig } from '@/apis';
-import { DEFAULT_CONFIG } from '@/configs/parameters';
+import { DEFAULT_CONFIG } from '@/configs';
 import { flatConfig } from '@/utils';
 
 import styles from './index.less';
@@ -14,6 +15,8 @@ const { Header, Footer, Content } = Layout;
 function App() {
   const [jsCode, setJsCode] = useState(DEFAULT_CONFIG.js);
   const [yamlCode, setYamlCode] = useState(DEFAULT_CONFIG.yaml);
+  const [hideOptional, setHideOptional] = useState(false);
+
   useMount(async () => {
     try {
       const config = await getConfig();
@@ -46,9 +49,28 @@ function App() {
     }
   };
 
+  const showRequiredChange = (checked: boolean) => {
+    setHideOptional(checked);
+  };
+
   return (
     <Layout>
-      <Header className={styles.header}>Severless Plus UI</Header>
+      <Header className={styles.header}>
+        <span className={styles.title}>
+          <FormattedMessage id="navbar.title" />
+        </span>
+        <div>
+          <Tooltip title={<FormattedMessage id="configs.hideOptional" />}>
+            <Switch
+              onChange={showRequiredChange}
+              checkedChildren={<FormattedMessage id="configs.hideOptional.hide" />}
+              unCheckedChildren={<FormattedMessage id="configs.hideOptional.show" />}
+              defaultChecked={false}
+            />
+          </Tooltip>
+          <SelectLang className={styles.langSelect} />
+        </div>
+      </Header>
       <Content>
         <ConfigForm
           onSubmit={onSubmit}
@@ -56,6 +78,7 @@ function App() {
           initYaml={yamlCode}
           initJs={jsCode}
           initCompName={jsCode.component}
+          hideOptional={hideOptional}
         />
       </Content>
       <Footer className={styles.footer}>
@@ -66,7 +89,7 @@ function App() {
         {'|'}
         &nbsp;&nbsp;
         <a target="_blank" rel="noopener noreferrer" href="https://github.com/serverless-plus/ui">
-          Source Code
+          <FormattedMessage id="footer.sourceCode" />
         </a>
       </Footer>
     </Layout>

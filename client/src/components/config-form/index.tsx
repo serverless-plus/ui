@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useMount } from 'react-use';
-import { Row, Col, Button, Form, Card, Switch } from 'antd';
+import { Row, Col, Button, Form, Alert } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 import YAML from 'js-yaml';
 import { Doc } from 'codemirror';
-import CodeMirror from '../codemirror';
 import Hotkeys from 'hotkeys-js';
+import { FormattedMessage } from 'umi';
 
-import { COMPONENT_LIST, COMPONENTS, getInputs, ComponentName } from '@/configs/parameters';
+import { COMPONENT_LIST, COMPONENTS, getInputs, ComponentName } from '@/configs';
 import { deepClone, parseConfig, flatConfig } from '@/utils';
+import CodeMirror from '@/components/codemirror';
 import { renderConfigs } from '@/components/render-utils';
 import ComponentSelect from '@/components/component-select';
-
-import './index.less';
 
 const FormLayout = {
   labelCol: {
@@ -20,6 +19,9 @@ const FormLayout = {
       span: 24,
     },
     sm: {
+      span: 24,
+    },
+    md: {
       span: 7,
     },
   },
@@ -28,13 +30,20 @@ const FormLayout = {
       span: 24,
     },
     sm: {
+      span: 24,
+    },
+    md: {
       span: 15,
     },
   },
 };
 
 const FormTailLayout = {
-  wrapperCol: { xs: { span: 24, offset: 0 }, sm: { span: 15, offset: 7 } },
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 24, offset: 0 },
+    md: { span: 15, offset: 7 },
+  },
 };
 
 type ConfigFormProps = {
@@ -46,10 +55,16 @@ type ConfigFormProps = {
 };
 
 const ConfigForm = (props: ConfigFormProps) => {
-  const { onSubmit, initCompName = 'websocket', initYaml, initJs, ...restProps } = props;
+  const {
+    onSubmit,
+    hideOptional,
+    initCompName = 'websocket',
+    initYaml,
+    initJs,
+    ...restProps
+  } = props;
   const [form] = Form.useForm();
   const [code, setCode] = useState(initYaml);
-  const [hideOptional, setHideOptional] = useState(false);
   const [componentName, setComponentName] = useState(initCompName);
   const [componentConfig, setComponentConfig] = useState(getInputs(initCompName as ComponentName));
   const codeEditorRef = useRef(null);
@@ -117,27 +132,20 @@ const ConfigForm = (props: ConfigFormProps) => {
     form.setFieldsValue(flatConfig(jsCode));
   };
 
-  const showRequiredChange = (checked: boolean) => {
-    setHideOptional(checked);
-  };
-
   return (
     <>
-      <Row>
+      <Row style={{ padding: '5px' }}>
         <Col xs={24} sm={24}>
-          <Card title="" bordered={false} bodyStyle={{ padding: '5px 10px' }}>
-            隐藏可选项{' '}
-            <Switch
-              onChange={showRequiredChange}
-              checkedChildren="开启"
-              unCheckedChildren="关闭"
-              defaultChecked={false}
-            />
-          </Card>
+          <Alert
+            message={<FormattedMessage id="configs.tips" />}
+            type="info"
+            showIcon={true}
+            closable={true}
+          />
         </Col>
       </Row>
       <Row {...restProps}>
-        <Col xs={24} sm={12}>
+        <Col xs={24} sm={24} md={24} lg={12}>
           <Form
             {...FormLayout}
             form={form}
@@ -149,19 +157,19 @@ const ConfigForm = (props: ConfigFormProps) => {
             <ComponentSelect
               list={COMPONENT_LIST}
               name="component"
-              label="Component"
+              label={<FormattedMessage id="app.component" />}
               onChange={compChange}
             />
             {renderConfigs({ parameters: COMPONENTS, form, hideOptional })}
             {renderConfigs({ parameters: componentConfig, form, hideOptional })}
             <Form.Item {...FormTailLayout}>
               <Button type="primary" htmlType="submit">
-                Generate
+                <FormattedMessage id="generate" />
               </Button>
             </Form.Item>
           </Form>
         </Col>
-        <Col xs={24} sm={12}>
+        <Col xs={24} sm={24} md={24} lg={12}>
           <CodeMirror
             ref={codeEditorRef}
             code={code}

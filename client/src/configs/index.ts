@@ -12,9 +12,9 @@ const COMPONENTS = {
   // },
   name: {
     type: 'string',
-    label: 'Name',
+    label: 'app.name',
     required: true,
-    description: 'Instance name',
+    description: 'app.name.description',
     ui: 'Input',
   },
 };

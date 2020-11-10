@@ -14,7 +14,7 @@ const websocket = {
           src: {
             required: true,
             type: 'string',
-            label: 'Code Path',
+            label: 'app.src.src',
             ui: 'Input',
           },
         },
@@ -22,8 +22,12 @@ const websocket = {
       region: {
         type: 'string',
         ui: 'Select',
-        label: 'Region',
+        label: 'app.region',
         default: 'ap-guangzhou',
+        action: {
+          type: 'REGION_CHANGE',
+          key: 'region',
+        },
         allows: ['ap-guangzhou', 'ap-beijing', 'ap-shanghai'],
       },
       faas: BASE_FAAS_CONFIG,

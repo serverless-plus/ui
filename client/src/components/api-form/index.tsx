@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-import { API_CONFIG } from '@/configs/parameters/base/apigw';
+import { API_CONFIG } from '@/configs/base/apigw';
 import { renderConfigs } from '../render-utils';
 
 const ApiFormLayout = {

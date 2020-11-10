@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Form, Select } from 'antd';
 import { SelectValue } from 'antd/lib/select';
 
 type SelectProps = {
   name: string;
-  label: string;
+  label: string | ReactNode;
   list: string[];
   onChange?: (value: SelectValue) => void;
 };

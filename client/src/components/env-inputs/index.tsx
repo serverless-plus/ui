@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Tooltip, Form, Space, Input, Button } from 'antd';
 import { InfoCircleOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 
 type EnvInputsProps = {
   name: string;
-  label?: string;
+  label?: string | ReactNode;
 };
 
 type EnvValue = {
@@ -23,7 +23,7 @@ const EnvInputs = (props: EnvInputsProps) => {
       <Form.List name={name}>
         {(fields, { add, remove }) => (
           <>
-            {fields.map((field) => (
+            {fields.map(field => (
               <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                 <Form.Item
                   className="form-list-item"

@@ -1,7 +1,8 @@
 import React from 'react';
 import { Divider } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-import { FormItem } from './form-item';
+import { FormattedMessage } from 'umi';
+import FormItem from './form-item';
 
 export interface AnyObject {
   [propName: string]: any;
@@ -23,7 +24,7 @@ function renderConfigs({ parameters, form, prefix, hideOptional = false }: Rende
       if (val.label && val.divider) {
         comp.push(
           <Divider orientation="left" key={newKey}>
-            {val.label}
+            <FormattedMessage id={val.label} />
           </Divider>,
         );
       }
