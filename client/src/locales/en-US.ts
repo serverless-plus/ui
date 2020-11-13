@@ -23,6 +23,8 @@ export default {
   'faas.vpc': 'VPC',
   'faas.vpc.select': 'Please select VPC',
   'faas.subnet.select': 'Please select subnet',
+  'faas.vpc.input': 'Please input VPC',
+  'faas.subnet.input': 'Please input subnet',
   'faas.runtime': 'Runtime',
   'faas.memorySize': 'Memory Size',
   'faas.environments': 'Environments',

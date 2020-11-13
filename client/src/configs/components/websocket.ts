@@ -1,5 +1,6 @@
 import { BASE_FAAS_CONFIG } from '../base/faas';
 import { BASE_APIGW_CONFIG } from '../base/apigw';
+import { REGION_LIST } from '../common';
 
 const websocket = {
   inputs: {
@@ -25,10 +26,10 @@ const websocket = {
         label: 'app.region',
         default: 'ap-guangzhou',
         action: {
-          type: 'REGION_CHANGE',
-          key: 'region',
+          type: 'global/REGION_CHANGE',
+          key: 'inputs.region',
         },
-        allows: ['ap-guangzhou', 'ap-beijing', 'ap-shanghai'],
+        allows: REGION_LIST,
       },
       faas: BASE_FAAS_CONFIG,
       apigw: BASE_APIGW_CONFIG,

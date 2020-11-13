@@ -12,7 +12,13 @@ const config = defineConfig({
   routes: [
     {
       path: '/',
-      component: '@/pages/index',
+      component: '@/layouts/index',
+      routes: [
+        {
+          path: '/',
+          component: '@/pages/index',
+        },
+      ],
     },
   ],
   theme: {

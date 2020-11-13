@@ -7,8 +7,8 @@ import { Doc } from 'codemirror';
 import Hotkeys from 'hotkeys-js';
 import { FormattedMessage } from 'umi';
 
-import { COMPONENT_LIST, COMPONENTS, getInputs, ComponentName } from '@/configs';
-import { deepClone, parseConfig, flatConfig } from '@/utils';
+import { COMPONENT_LIST, COMMON_CONFIGS, getInputs, ComponentName } from '@/configs';
+import { deepClone, parseConfig, flatConfig, cleanEmptyValue } from '@/utils';
 import CodeMirror from '@/components/codemirror';
 import { renderConfigs } from '@/components/render-utils';
 import ComponentSelect from '@/components/component-select';
@@ -48,39 +48,27 @@ const FormTailLayout = {
 
 type ConfigFormProps = {
   onSubmit: any;
-  initCompName?: string;
+  initCompName: string;
   initJs?: { [propName: string]: any };
   initYaml?: string;
   [propName: string]: any;
 };
 
 const ConfigForm = (props: ConfigFormProps) => {
-  const {
-    onSubmit,
-    hideOptional,
-    initCompName = 'websocket',
-    initYaml,
-    initJs,
-    ...restProps
-  } = props;
+  const { onSubmit, hideOptional, initCompName, initYaml, initJs, ...restProps } = props;
   const [form] = Form.useForm();
   const [code, setCode] = useState(initYaml);
-  const [componentName, setComponentName] = useState(initCompName);
   const [componentConfig, setComponentConfig] = useState(getInputs(initCompName as ComponentName));
   const codeEditorRef = useRef(null);
 
   useEffect(() => {
-    const curComponent = getInputs(componentName as ComponentName);
+    const curComponent = getInputs(initCompName as ComponentName);
     setComponentConfig(curComponent);
-  }, [componentName]);
+  }, [initCompName]);
 
   useEffect(() => {
     form.setFieldsValue(initJs);
   }, [form, initJs]);
-
-  useEffect(() => {
-    setComponentName(initCompName);
-  }, [initCompName]);
 
   useEffect(() => {
     setCode(initYaml);
@@ -112,7 +100,7 @@ const ConfigForm = (props: ConfigFormProps) => {
   });
 
   const onFinish = async (values: any) => {
-    const jsCode = parseConfig(deepClone(values));
+    const jsCode = parseConfig(cleanEmptyValue(deepClone(values)));
     const yamlCode = YAML.dump(jsCode);
 
     setCode(yamlCode);
@@ -121,8 +109,11 @@ const ConfigForm = (props: ConfigFormProps) => {
     }
   };
 
-  const compChange = (value: SelectValue) => {
-    setComponentName(value as string);
+  const onFormChange = (values: any, allValues: any) => {
+    const jsCode = parseConfig(cleanEmptyValue(deepClone(allValues)));
+    const yamlCode = YAML.dump(jsCode);
+
+    setCode(yamlCode);
   };
 
   const onCodeChange = (instance: Doc) => {
@@ -152,15 +143,16 @@ const ConfigForm = (props: ConfigFormProps) => {
             name="config"
             onFinish={onFinish}
             initialValues={initJs}
+            onValuesChange={onFormChange}
             scrollToFirstError
           >
-            <ComponentSelect
+            {/* <ComponentSelect
               list={COMPONENT_LIST}
               name="component"
               label={<FormattedMessage id="app.component" />}
               onChange={compChange}
-            />
-            {renderConfigs({ parameters: COMPONENTS, form, hideOptional })}
+            /> */}
+            {renderConfigs({ parameters: COMMON_CONFIGS, form, hideOptional })}
             {renderConfigs({ parameters: componentConfig, form, hideOptional })}
             <Form.Item {...FormTailLayout}>
               <Button type="primary" htmlType="submit">

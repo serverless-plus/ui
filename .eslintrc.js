@@ -48,7 +48,7 @@ module.exports = {
         exceptions: ['e', 'i', 'n', 't', 'x', 'y', 'z', '_', '$'],
       },
     ],
-    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-explicit-any': 'off',
     'no-alert': 'error',
     'no-console': 'off',
     'no-const-assign': 'error',

@@ -6,6 +6,22 @@ const typeOf = (obj: any) => {
   return Object.prototype.toString.call(obj).slice(8, -1);
 };
 
+function isEmpty(val: any) {
+  return (
+    val === '' || val === undefined || val === null || (typeOf(val) === 'Number' && isNaN(val))
+  );
+}
+
+function cleanEmptyValue(obj: AnyObject) {
+  const newObj: AnyObject = {};
+  Object.entries(obj).forEach(([key, val]) => {
+    if (!isEmpty(val)) {
+      newObj[key] = val;
+    }
+  });
+  return newObj;
+}
+
 const deepClone = (obj: AnyObject) => {
   return JSON.parse(JSON.stringify(obj));
 };
@@ -86,4 +102,4 @@ const flatConfig = (obj: AnyObject) => {
   return newObj;
 };
 
-export { deepClone, dotPropToObject, parseConfig, flatConfig };
+export { deepClone, dotPropToObject, parseConfig, flatConfig, cleanEmptyValue };

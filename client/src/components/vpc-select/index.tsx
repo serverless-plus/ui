@@ -10,40 +10,48 @@ type VpcSelectProps = {
   form: FormInstance;
   name: string;
   label?: string | ReactNode;
+  dependField: string;
   [propName: string]: any;
 };
 
-const depsField = `inputs.region`;
 const VpcSelect = (props: VpcSelectProps) => {
-  const { form, name, label, global } = props;
-  const rg = form.getFieldValue(depsField);
-  const region = global[depsField] || rg;
+  const { form, name, label, global, dependField } = props;
+  const rg = form.getFieldValue(dependField);
+  const vpcId = form.getFieldValue(`${name}.vpcId`);
+  const region = global[dependField] || rg;
   const [list, setList] = useState([]);
   const [subList, setSubList] = useState([]);
 
-  const handleMainChange = async (value: string) => {
-    const obj: AnyObject = {};
-    obj[`${name}.subnetId`] = '';
-    form.setFieldsValue(obj);
-    const res = await getSubnetList({ region, vpcId: value });
+  async function getList() {
+    const res = await getVpcList({ region });
+    setList(res.data || []);
+    if (res.code !== 0 && res.error) {
+      console.log(`[Error] ${res.error.message}(reqId: ${res.error.reqId})`);
+    }
+  }
 
+  async function getSubList(vpcId: string) {
+    const res = await getSubnetList({ region, vpcId });
     setSubList(res.data || []);
     if (res.code !== 0 && res.error) {
       console.log(`[Error] ${res.error.message}(reqId: ${res.error.reqId})`);
     }
+  }
+
+  const handleMainChange = async (value: string) => {
+    await getSubList(value);
   };
 
   useEffect(() => {
-    async function getList() {
-      const res = await getVpcList({ region });
-
-      setList(res.data || []);
-      if (res.code !== 0 && res.error) {
-        console.log(`[Error] ${res.error.message}(reqId: ${res.error.reqId})`);
-      }
-    }
+    setSubList([]);
     getList();
   }, [region]);
+
+  useEffect(() => {
+    if (vpcId) {
+      getSubList(vpcId);
+    }
+  }, [vpcId]);
 
   return (
     <ComposeSelect

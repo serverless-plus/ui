@@ -9,13 +9,6 @@ const framework = {
     divider: false,
     border: true,
     keys: {
-      framework: {
-        type: 'string',
-        ui: 'Select',
-        label: 'framework.framework',
-        default: 'express',
-        allows: ['express', 'koa', 'egg', 'next', 'nuxt'],
-      },
       src: {
         type: 'object',
         keys: {

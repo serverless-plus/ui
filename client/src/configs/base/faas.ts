@@ -61,7 +61,9 @@ const BASE_FAAS_CONFIG = {
     vpc: {
       type: 'vpc',
       label: 'faas.vpc',
-      ui: 'VpcSelect',
+      // ui: 'VpcSelect',
+      dependField: 'inputs.region',
+      ui: 'VpcInput',
       default: {},
     },
   },

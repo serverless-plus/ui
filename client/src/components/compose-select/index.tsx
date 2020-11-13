@@ -1,7 +1,8 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import { Form, Select, Row, Col } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { FormattedMessage } from 'umi';
+import { AnyObject } from '@/typings';
 
 type ComposeSelectProps = {
   form: FormInstance;
@@ -20,6 +21,7 @@ type ComposeSelectProps = {
 
 const ComposeSelect = (props: ComposeSelectProps) => {
   const {
+    form,
     name,
     mainName,
     mainPlaceHolder,
@@ -31,6 +33,20 @@ const ComposeSelect = (props: ComposeSelectProps) => {
     handleMainChange,
     onChange,
   } = props;
+
+  // if list change, clear select value
+  useEffect(() => {
+    form.resetFields([mainName, subName]);
+  }, [list]);
+
+  // if main change, clear sub select
+  const mainChange = async (value: string) => {
+    form.resetFields([subName]);
+    if (handleMainChange) {
+      await handleMainChange(value);
+    }
+  };
+
   return list && list.length > 0 ? (
     <Form.Item label={label} name={name}>
       <Row>
@@ -38,7 +54,7 @@ const ComposeSelect = (props: ComposeSelectProps) => {
           <Form.Item name={mainName} style={{ width: '100%' }}>
             <Select
               allowClear={true}
-              onChange={handleMainChange}
+              onChange={mainChange}
               placeholder={<FormattedMessage id={mainPlaceHolder} />}
             >
               {list.map((item: string) => (

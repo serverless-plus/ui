@@ -10,6 +10,7 @@ import { FormInstance } from 'antd/lib/form';
 import EnvInputs from './env-inputs';
 import ApiInputs from './api-inputs';
 import VpcSelect from './vpc-select';
+import VpcInput from './vpc-input';
 import { AnyObject } from './render-utils';
 
 type FormItemProps = {
@@ -19,6 +20,7 @@ type FormItemProps = {
   name: string;
   label: string;
   description?: string;
+  dependField?: string;
   regex?: RegExp;
   required?: boolean;
   disabled?: boolean;
@@ -45,6 +47,7 @@ const FormItem = (props: FormItemProps) => {
     action,
     onChange,
     dispatch,
+    dependField,
   } = props;
   const fieldItemChange = (v: any) => {
     // you can config `action` field for config parameter to dispatch global state
@@ -52,7 +55,7 @@ const FormItem = (props: FormItemProps) => {
       const payload: AnyObject = {};
       payload[name] = v;
       dispatch({
-        type: `global/${action.type}`,
+        type: action.type,
         payload,
       });
     }
@@ -160,10 +163,14 @@ const FormItem = (props: FormItemProps) => {
         <VpcSelect
           name={name}
           label={<FormattedMessage id={label} />}
+          dependField={dependField}
           form={form}
           onChange={onChange}
         />
       );
+      break;
+    case 'VpcInput':
+      component = <VpcInput name={name} label={<FormattedMessage id={label} />} form={form} />;
       break;
     default:
       component = (

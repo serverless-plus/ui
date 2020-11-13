@@ -23,6 +23,8 @@ export default {
   'faas.vpc': '私有网络',
   'faas.vpc.select': '请选择 VPC',
   'faas.subnet.select': '请选择子网',
+  'faas.vpc.input': '请输入 VPC',
+  'faas.subnet.input': '请输入子网',
   'faas.runtime': '运行环境',
   'faas.memorySize': '运行内存',
   'faas.environments': '环境变量',

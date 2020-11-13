@@ -30,7 +30,7 @@ function runPortFinder() {
   });
 }
 
-function findPort(port: any) {
+function findPort(port: string | number): Promise<any> {
   if (port) {
     return Promise.resolve(port);
   }

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Layout, Alert, Switch, Tooltip, notification } from 'antd';
 import { useMount } from 'react-use';
-import { FormattedMessage, SelectLang } from 'umi';
+import { connect, Dispatch } from 'umi';
+import { ConnectState } from '@/models/connect';
 
 import { ConfigForm } from '@/components/config-form';
 import { getConfig, postConfig } from '@/apis';
@@ -10,12 +11,13 @@ import { flatConfig } from '@/utils';
 
 import styles from './index.less';
 
-const { Header, Footer, Content } = Layout;
-
-function App() {
+type PageProps = {
+  hideOptional: boolean;
+  component: string;
+};
+function ConfigPage({ hideOptional, component }: PageProps) {
   const [jsCode, setJsCode] = useState(DEFAULT_CONFIG.js);
   const [yamlCode, setYamlCode] = useState(DEFAULT_CONFIG.yaml);
-  const [hideOptional, setHideOptional] = useState(false);
 
   useMount(async () => {
     try {
@@ -49,51 +51,18 @@ function App() {
     }
   };
 
-  const showRequiredChange = (checked: boolean) => {
-    setHideOptional(checked);
-  };
-
   return (
-    <Layout>
-      <Header className={styles.header}>
-        <span className={styles.title}>
-          <FormattedMessage id="navbar.title" />
-        </span>
-        <div>
-          <Tooltip title={<FormattedMessage id="configs.hideOptional" />}>
-            <Switch
-              onChange={showRequiredChange}
-              checkedChildren={<FormattedMessage id="configs.hideOptional.hide" />}
-              unCheckedChildren={<FormattedMessage id="configs.hideOptional.show" />}
-              defaultChecked={false}
-            />
-          </Tooltip>
-          <SelectLang className={styles.langSelect} />
-        </div>
-      </Header>
-      <Content>
-        <ConfigForm
-          onSubmit={onSubmit}
-          className={styles.configForm}
-          initYaml={yamlCode}
-          initJs={jsCode}
-          initCompName={jsCode.component}
-          hideOptional={hideOptional}
-        />
-      </Content>
-      <Footer className={styles.footer}>
-        <a target="_blank" rel="noopener noreferrer" href="https://github.com/serverless-plus">
-          @Serverless Plus
-        </a>
-        &nbsp;&nbsp;
-        {'|'}
-        &nbsp;&nbsp;
-        <a target="_blank" rel="noopener noreferrer" href="https://github.com/serverless-plus/ui">
-          <FormattedMessage id="footer.sourceCode" />
-        </a>
-      </Footer>
-    </Layout>
+    <ConfigForm
+      onSubmit={onSubmit}
+      className={styles.configForm}
+      initYaml={yamlCode}
+      initJs={jsCode}
+      initCompName={component}
+      hideOptional={hideOptional}
+    />
   );
 }
 
-export default App;
+export default connect(({ global }: ConnectState) => ({
+  ...global,
+}))(ConfigPage);

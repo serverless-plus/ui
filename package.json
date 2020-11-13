@@ -1,6 +1,6 @@
 {
   "name": "@slsplus/ui",
-  "version": "0.0.1-beta",
+  "version": "0.0.1-beta-1",
   "description": "UI Tool for Serverless Plus CLI",
   "main": "./dist/server.js",
   "publishConfig": {
