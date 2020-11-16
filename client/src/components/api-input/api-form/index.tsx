@@ -2,23 +2,23 @@ import React from 'react';
 import { Form } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { API_CONFIG } from '@/configs/base/apigw';
-import { renderConfigs } from '../render-utils';
+import { renderConfigs } from '@/components/render-utils';
 
-const ApiFormLayout = {
+const FormLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 10 },
 };
 
-type ApiFormProps = {
+type FormProps = {
   form: FormInstance;
   onFinish: (val: any) => void;
 };
 
-const ApiForm = (props: ApiFormProps) => {
+const ApiForm = (props: FormProps) => {
   const { form, onFinish } = props;
   return (
     <Form
-      {...ApiFormLayout}
+      {...FormLayout}
       name="apiForm"
       form={form}
       initialValues={{ path: '/', method: 'ANY', enableCORS: true }}

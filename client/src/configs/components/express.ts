@@ -1,5 +1,6 @@
 import { BASE_FAAS_CONFIG } from '../base/faas';
 import { BASE_APIGW_CONFIG } from '../base/apigw';
+import { CODE_CONFIG } from '../base/code';
 import { REGION_LIST } from '../common';
 
 const framework = {
@@ -9,17 +10,7 @@ const framework = {
     divider: false,
     border: true,
     keys: {
-      src: {
-        type: 'object',
-        keys: {
-          src: {
-            required: true,
-            type: 'string',
-            label: 'app.src.src',
-            ui: 'Input',
-          },
-        },
-      },
+      src: CODE_CONFIG,
       region: {
         type: 'string',
         ui: 'Select',

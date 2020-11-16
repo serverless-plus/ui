@@ -9,7 +9,7 @@ const BASE_APIGW_CONFIG = {
       type: 'string',
       label: 'apigw.name',
       ui: 'Input',
-      required: true,
+      required: false,
       regex: /^[a-zA-Z][a-zA-Z0-9(_)]{0,48}[a-zA-Z0-9]?$/g,
     },
     protocols: {
@@ -33,11 +33,11 @@ const APIGW_CONFIG = deepClone(BASE_APIGW_CONFIG);
 APIGW_CONFIG.keys.apis = {
   type: 'array',
   label: 'apigw.apiList',
-  ui: 'ApiInputs',
+  ui: 'ApiInput',
   default: [],
 };
 
-const API_METHODS = ['ANY', 'GET', 'POST'];
+const API_METHODS = ['ANY', 'GET', 'POST', 'PUT', 'DELETE', 'HEAD'];
 
 const API_CONFIG = {
   path: {
@@ -61,5 +61,7 @@ const API_CONFIG = {
     allows: [true, false],
   },
 };
+
+console.log('APIGW_CONFIG', APIGW_CONFIG);
 
 export { BASE_APIGW_CONFIG, API_CONFIG, APIGW_CONFIG, API_METHODS };

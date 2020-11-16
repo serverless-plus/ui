@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout, Alert, Switch, Tooltip, notification } from 'antd';
+import { Alert, notification } from 'antd';
 import { useMount } from 'react-use';
 import { connect, Dispatch } from 'umi';
 import { ConnectState } from '@/models/connect';
@@ -14,19 +14,28 @@ import styles from './index.less';
 type PageProps = {
   hideOptional: boolean;
   component: string;
+  dispatch?: Dispatch;
 };
-function ConfigPage({ hideOptional, component }: PageProps) {
+function ConfigPage({ hideOptional, component, dispatch }: PageProps) {
   const [jsCode, setJsCode] = useState(DEFAULT_CONFIG.js);
   const [yamlCode, setYamlCode] = useState(DEFAULT_CONFIG.yaml);
+
+  const initComponent = (v: string) => {
+    if (dispatch && v) {
+      dispatch({
+        type: 'global/COMPONENT_CHANGE',
+        payload: {
+          component: v,
+        },
+      });
+    }
+  };
 
   useMount(async () => {
     try {
       const config = await getConfig();
-      console.log('config', config);
-
       if (config.code === 0) {
-        console.log('flatConfig(config.js)', flatConfig(config.js));
-
+        initComponent(config.js.component);
         setJsCode(flatConfig(config.js));
         setYamlCode(config.yaml);
       }

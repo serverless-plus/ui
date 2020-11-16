@@ -3,14 +3,14 @@ import { FormInstance } from 'antd/lib/form';
 import { useIntl } from 'umi';
 import { Form, Row, Col, Input } from 'antd';
 
-type VpcSelectProps = {
+type Props = {
   form: FormInstance;
   name: string;
   label?: string | ReactNode;
   [propName: string]: any;
 };
 
-const VpcInput = (props: VpcSelectProps) => {
+const ClsInput = (props: Props) => {
   const intl = useIntl();
   const { name, label } = props;
 
@@ -18,19 +18,19 @@ const VpcInput = (props: VpcSelectProps) => {
     <Form.Item label={label}>
       <Row>
         <Col span={12}>
-          <Form.Item name={`${name}.vpcId`} style={{ width: '100%' }}>
+          <Form.Item name={`${name}.logsetId`} style={{ width: '100%' }}>
             <Input
               placeholder={intl.formatMessage({
-                id: 'faas.vpc.vpcId.input',
+                id: 'faas.cls.logsetId.input',
               })}
             />
           </Form.Item>
         </Col>
         <Col span={12}>
-          <Form.Item name={`${name}.subnetId`} style={{ width: '100%' }}>
+          <Form.Item name={`${name}.topicId`} style={{ width: '100%' }}>
             <Input
               placeholder={intl.formatMessage({
-                id: 'faas.vpc.subnetId.input',
+                id: 'faas.cls.topicId.input',
               })}
             />
           </Form.Item>
@@ -40,4 +40,4 @@ const VpcInput = (props: VpcSelectProps) => {
   );
 };
 
-export default VpcInput;
+export default ClsInput;

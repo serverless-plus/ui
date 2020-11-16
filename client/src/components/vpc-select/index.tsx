@@ -1,10 +1,10 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { FormInstance } from 'antd/lib/form';
 import { connect } from 'umi';
 import { ConnectState } from '@/models/connect';
-import ComposeSelect from '@/components/compose-select';
+import ComposeSelect from '@/components/common/compose-select';
 import { getVpcList, getSubnetList } from '@/apis/vpc';
-import { AnyObject } from '../render-utils';
+import { useMount } from 'react-use';
 
 type VpcSelectProps = {
   form: FormInstance;
@@ -14,6 +14,23 @@ type VpcSelectProps = {
   [propName: string]: any;
 };
 
+async function getList(region: string) {
+  const res = await getVpcList({ region });
+  if (res.code !== 0 && res.error) {
+    console.log(`[Error] ${res.error.message}(reqId: ${res.error.reqId})`);
+  }
+
+  return res.data || [];
+}
+
+async function getSubList(region: string, vpcId: string) {
+  const res = await getSubnetList({ region, vpcId });
+  if (res.code !== 0 && res.error) {
+    console.log(`[Error] ${res.error.message}(reqId: ${res.error.reqId})`);
+  }
+  return res.data || [];
+}
+
 const VpcSelect = (props: VpcSelectProps) => {
   const { form, name, label, global, dependField } = props;
   const rg = form.getFieldValue(dependField);
@@ -22,36 +39,20 @@ const VpcSelect = (props: VpcSelectProps) => {
   const [list, setList] = useState([]);
   const [subList, setSubList] = useState([]);
 
-  async function getList() {
-    const res = await getVpcList({ region });
-    setList(res.data || []);
-    if (res.code !== 0 && res.error) {
-      console.log(`[Error] ${res.error.message}(reqId: ${res.error.reqId})`);
-    }
-  }
-
-  async function getSubList(vpcId: string) {
-    const res = await getSubnetList({ region, vpcId });
-    setSubList(res.data || []);
-    if (res.code !== 0 && res.error) {
-      console.log(`[Error] ${res.error.message}(reqId: ${res.error.reqId})`);
-    }
-  }
-
   const handleMainChange = async (value: string) => {
-    await getSubList(value);
+    await getSubList(region, value);
   };
 
-  useEffect(() => {
+  useMount(async () => {
     setSubList([]);
-    getList();
-  }, [region]);
+    const list = await getList(region);
+    setList(list);
 
-  useEffect(() => {
     if (vpcId) {
-      getSubList(vpcId);
+      const subList = await getSubList(region, vpcId);
+      setSubList(subList);
     }
-  }, [vpcId]);
+  });
 
   return (
     <ComposeSelect
@@ -60,8 +61,8 @@ const VpcSelect = (props: VpcSelectProps) => {
       label={label}
       mainName={`${name}.vpcId`}
       subName={`${name}.subnetId`}
-      mainPlaceHolder={'faas.vpc.select'}
-      subPlaceHolder={'faas.subnet.select'}
+      mainPlaceHolder={'faas.vpc.vpcId.select'}
+      subPlaceHolder={'faas.vpc.subnetId.select'}
       list={list}
       subList={subList}
       handleMainChange={handleMainChange}

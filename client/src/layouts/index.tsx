@@ -1,6 +1,5 @@
-import React, { Children, ReactNode, useState } from 'react';
-import { Layout, Alert, Switch, Tooltip, notification } from 'antd';
-import { useMount } from 'react-use';
+import React, { ReactNode } from 'react';
+import { Layout, Switch, Tooltip } from 'antd';
 import { FormattedMessage, SelectLang } from 'umi';
 import { connect, Dispatch } from 'umi';
 import { ConnectState } from '@/models/connect';
@@ -27,7 +26,7 @@ function AppLayout(props: LayoutProps) {
   };
 
   return (
-    <Layout>
+    <Layout style={{ height: '100%' }}>
       <Header className={styles.header}>
         <span className={styles.title}>
           <FormattedMessage id="navbar.title" />
@@ -44,7 +43,7 @@ function AppLayout(props: LayoutProps) {
           <SelectLang className={styles.langSelect} />
         </div>
       </Header>
-      <Content>{children}</Content>
+      <Content className={styles.content}>{children}</Content>
       <Footer className={styles.footer}>
         <a target="_blank" rel="noopener noreferrer" href="https://github.com/serverless-plus">
           @Serverless Plus

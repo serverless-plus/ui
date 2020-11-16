@@ -9,7 +9,10 @@ const DEFAULT_CONFIG: InitConfig = {
     'inputs.src.src': './',
     'inputs.faas.name': 'test',
     'inputs.faas.runtime': 'Nodejs10.15',
-    'inputs.faas.memorySize': '128',
+    'inputs.faas.timeout': 3,
+    'inputs.faas.memorySize': 128,
+    'inputs.faas.publicAccess': false,
+    'inputs.faas.eip': false,
     'inputs.apigw.name': 'serverless',
     'inputs.apigw.environment': 'release',
     'inputs.apigw.protocols': ['http'],
@@ -24,7 +27,7 @@ inputs:
   faas:
     name: test
     runtime: Nodejs10.15
-    memorySize: '128'
+    memorySize: 128
   apigw:
     name: serverless
     protocols:
@@ -41,6 +44,7 @@ const COMMON_CONFIGS = {
   component: {
     type: 'string',
     label: 'app.component',
+    required: true,
     ui: 'Select',
     allows: COMPONENT_LIST,
     action: {
@@ -57,6 +61,17 @@ const COMMON_CONFIGS = {
   },
 };
 
-const REGION_LIST: string[] = ['ap-guangzhou', 'ap-beijing', 'ap-shanghai'];
+const REGION_LIST: string[] = [
+  'ap-guangzhou',
+  'ap-shanghai',
+  'ap-hongkong',
+  'ap-beijing',
+  'ap-chengdu',
+  'ap-tokyo',
+  'ap-mumbai',
+  'ap-singapore',
+  'na-siliconvalley',
+  'na-toronto',
+];
 
 export { DEFAULT_CONFIG, REGION_LIST, COMPONENT_LIST, COMMON_CONFIGS };

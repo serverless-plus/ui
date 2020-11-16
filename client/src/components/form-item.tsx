@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, Input, Form, Radio, Tooltip } from 'antd';
+import { Select, Input, InputNumber, Form, Radio, Tooltip } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
 import { FormattedMessage } from 'umi';
 import { Rule } from 'rc-field-form/es/interface';
@@ -7,10 +7,16 @@ import { connect, Dispatch } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { FormInstance } from 'antd/lib/form';
 
-import EnvInputs from './env-inputs';
-import ApiInputs from './api-inputs';
+import EnvInput from './env-input';
+import ApiInput from './api-input';
 import VpcSelect from './vpc-select';
 import VpcInput from './vpc-input';
+import TagInput from './tag-input';
+import LayerInput from './layer-input';
+import CfsInput from './cfs-input';
+import ExcludeInput from './exclude-input';
+import ClsInput from './cls-input';
+
 import { AnyObject } from './render-utils';
 
 type FormItemProps = {
@@ -49,6 +55,8 @@ const FormItem = (props: FormItemProps) => {
     dispatch,
     dependField,
   } = props;
+  console.log('+++++', props);
+
   const fieldItemChange = (v: any) => {
     // you can config `action` field for config parameter to dispatch global state
     if (action && dispatch) {
@@ -62,6 +70,12 @@ const FormItem = (props: FormItemProps) => {
     if (onChange && typeof onChange === 'function') {
       onChange(v, name);
     }
+  };
+  const normalize = (v: any) => {
+    if (type === 'number') {
+      return +v;
+    }
+    return v;
   };
   const rules = [];
   if (required) {
@@ -81,7 +95,12 @@ const FormItem = (props: FormItemProps) => {
   switch (ui) {
     case 'Input':
       component = (
-        <Form.Item name={name} label={<FormattedMessage id={label} />} rules={rules}>
+        <Form.Item
+          name={name}
+          label={<FormattedMessage id={label} />}
+          rules={rules}
+          normalize={normalize}
+        >
           <Input
             disabled={disabled}
             onChange={e => {
@@ -90,10 +109,22 @@ const FormItem = (props: FormItemProps) => {
             suffix={
               description ? (
                 <Tooltip title={<FormattedMessage id={description} />}>
-                  <InfoCircleOutlined style={{ color: 'rgba(0,0,0,.45)' }} />
+                  <InfoCircleOutlined className="info-icon" />
                 </Tooltip>
               ) : null
             }
+          />
+        </Form.Item>
+      );
+      break;
+    case 'InputNumber':
+      component = (
+        <Form.Item name={name} label={<FormattedMessage id={label} />} rules={rules}>
+          <InputNumber
+            disabled={disabled}
+            onChange={v => {
+              fieldItemChange(v);
+            }}
           />
         </Form.Item>
       );
@@ -125,8 +156,8 @@ const FormItem = (props: FormItemProps) => {
             }}
           >
             {allows.map(item => (
-              <Radio value={item} key={item}>
-                {String(item)}
+              <Radio value={item.value} key={item.value}>
+                {<FormattedMessage id={item.label} />}
               </Radio>
             ))}
           </Radio.Group>
@@ -152,11 +183,14 @@ const FormItem = (props: FormItemProps) => {
         </Form.Item>
       );
       break;
-    case 'EnvInputs':
-      component = <EnvInputs name={name} label={<FormattedMessage id={label} />} />;
+    case 'EnvInput':
+      component = <EnvInput name={name} label={<FormattedMessage id={label} />} form={form} />;
       break;
-    case 'ApiInputs':
-      component = <ApiInputs name={name} label={<FormattedMessage id={label} />} form={form} />;
+    case 'ApiInput':
+      component = <ApiInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      break;
+    case 'TagInput':
+      component = <TagInput name={name} label={<FormattedMessage id={label} />} form={form} />;
       break;
     case 'VpcSelect':
       component = (
@@ -172,14 +206,38 @@ const FormItem = (props: FormItemProps) => {
     case 'VpcInput':
       component = <VpcInput name={name} label={<FormattedMessage id={label} />} form={form} />;
       break;
+    case 'LayerInput':
+      component = <LayerInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      break;
+    case 'CfsInput':
+      component = <CfsInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      break;
+    case 'ExcludeInput':
+      component = <ExcludeInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      break;
+    case 'ClsInput':
+      component = <ClsInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      break;
     default:
       component = (
-        <Form.Item name={name} label={<FormattedMessage id={label} />}>
+        <Form.Item
+          name={name}
+          label={<FormattedMessage id={label} />}
+          rules={rules}
+          normalize={normalize}
+        >
           <Input
             disabled={disabled}
             onChange={e => {
               fieldItemChange(e.target.value);
             }}
+            suffix={
+              description ? (
+                <Tooltip title={<FormattedMessage id={description} />}>
+                  <InfoCircleOutlined className="info-icon" />
+                </Tooltip>
+              ) : null
+            }
           />
         </Form.Item>
       );

@@ -8,7 +8,11 @@ const typeOf = (obj: any) => {
 
 function isEmpty(val: any) {
   return (
-    val === '' || val === undefined || val === null || (typeOf(val) === 'Number' && isNaN(val))
+    val === '' ||
+    val === undefined ||
+    val === null ||
+    (typeOf(val) === 'Number' && isNaN(val)) ||
+    (typeOf(val) === 'Array' && val.length === 0)
   );
 }
 

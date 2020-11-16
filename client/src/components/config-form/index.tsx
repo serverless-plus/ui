@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useMount } from 'react-use';
 import { Row, Col, Button, Form, Alert } from 'antd';
-import { SelectValue } from 'antd/lib/select';
+import { SaveOutlined } from '@ant-design/icons';
 import YAML from 'js-yaml';
 import { Doc } from 'codemirror';
 import Hotkeys from 'hotkeys-js';
 import { FormattedMessage } from 'umi';
 
-import { COMPONENT_LIST, COMMON_CONFIGS, getInputs, ComponentName } from '@/configs';
+import { COMMON_CONFIGS, getInputs, ComponentName } from '@/configs';
 import { deepClone, parseConfig, flatConfig, cleanEmptyValue } from '@/utils';
-import CodeMirror from '@/components/codemirror';
+import CodeMirror from '@/components/common/codemirror';
 import { renderConfigs } from '@/components/render-utils';
-import ComponentSelect from '@/components/component-select';
+
+import styles from './index.less';
 
 const FormLayout = {
   labelCol: {
@@ -38,13 +39,13 @@ const FormLayout = {
   },
 };
 
-const FormTailLayout = {
-  wrapperCol: {
-    xs: { span: 24, offset: 0 },
-    sm: { span: 24, offset: 0 },
-    md: { span: 15, offset: 7 },
-  },
-};
+// const FormTailLayout = {
+//   wrapperCol: {
+//     xs: { span: 24, offset: 0 },
+//     sm: { span: 24, offset: 0 },
+//     md: { span: 15, offset: 7 },
+//   },
+// };
 
 type ConfigFormProps = {
   onSubmit: any;
@@ -63,6 +64,7 @@ const ConfigForm = (props: ConfigFormProps) => {
 
   useEffect(() => {
     const curComponent = getInputs(initCompName as ComponentName);
+
     setComponentConfig(curComponent);
   }, [initCompName]);
 
@@ -146,19 +148,19 @@ const ConfigForm = (props: ConfigFormProps) => {
             onValuesChange={onFormChange}
             scrollToFirstError
           >
-            {/* <ComponentSelect
-              list={COMPONENT_LIST}
-              name="component"
-              label={<FormattedMessage id="app.component" />}
-              onChange={compChange}
-            /> */}
             {renderConfigs({ parameters: COMMON_CONFIGS, form, hideOptional })}
             {renderConfigs({ parameters: componentConfig, form, hideOptional })}
-            <Form.Item {...FormTailLayout}>
-              <Button type="primary" htmlType="submit">
-                <FormattedMessage id="generate" />
-              </Button>
-            </Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              shape="round"
+              size="large"
+              className={styles.submitButton}
+              icon={<SaveOutlined />}
+            >
+              {' '}
+              <FormattedMessage id="generate" />
+            </Button>
           </Form>
         </Col>
         <Col xs={24} sm={24} md={24} lg={12}>

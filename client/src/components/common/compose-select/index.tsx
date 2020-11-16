@@ -2,7 +2,6 @@ import React, { ReactNode, useEffect } from 'react';
 import { Form, Select, Row, Col } from 'antd';
 import { FormInstance } from 'antd/lib/form';
 import { FormattedMessage } from 'umi';
-import { AnyObject } from '@/typings';
 
 type ComposeSelectProps = {
   form: FormInstance;
@@ -37,7 +36,7 @@ const ComposeSelect = (props: ComposeSelectProps) => {
   // if list change, clear select value
   useEffect(() => {
     form.resetFields([mainName, subName]);
-  }, [list]);
+  }, [form, list, mainName, subName]);
 
   // if main change, clear sub select
   const mainChange = async (value: string) => {
