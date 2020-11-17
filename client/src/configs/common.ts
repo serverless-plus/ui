@@ -7,7 +7,7 @@ const DEFAULT_CONFIG: InitConfig = {
     'inputs.framework': 'express',
     'inputs.region': 'ap-guangzhou',
     'inputs.src.src': './',
-    'inputs.faas.name': 'test',
+    'inputs.faas.name': 'express-app',
     'inputs.faas.runtime': 'Nodejs10.15',
     'inputs.faas.timeout': 3,
     'inputs.faas.memorySize': 128,
@@ -18,15 +18,16 @@ const DEFAULT_CONFIG: InitConfig = {
     'inputs.apigw.protocols': ['http'],
     'inputs.apigw.apis': [{ path: '/', method: 'ANY' }],
   },
-  yaml: `component: websocket
-name: websocket-demo
+  yaml: `component: framework
+name: framework-demo
 inputs:
   src:
     src: ./
   region: ap-guangzhou
   faas:
-    name: test
+    name: express-app
     runtime: Nodejs10.15
+    timeout: 3
     memorySize: 128
   apigw:
     name: serverless
