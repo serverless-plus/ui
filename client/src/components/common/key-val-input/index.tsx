@@ -46,14 +46,8 @@ const KeyValInput = (props: KeyValInputProps) => {
 
   const showFormDialog = (field: { [prop: string]: any }) => {
     setDialogShow(true);
-    console.log(field);
-    console.log('form', form);
-    console.log('name', name);
-
     const curField = form.getFieldValue(name);
     const current = curField[field.fieldKey];
-
-    console.log('current', current);
 
     editFormInstance?.setFieldsValue(current);
 
@@ -65,14 +59,12 @@ const KeyValInput = (props: KeyValInputProps) => {
     const oldFormValues = form.getFieldsValue();
     oldFormValues[name][fieldKey] = current;
     form.setFieldsValue(oldFormValues);
-    console.log('oldFormValues', oldFormValues);
     setDialogShow(false);
   };
 
   const removeField = (fieldKey: number) => {
     const oldFormValues = form.getFieldsValue();
     oldFormValues[name].splice(fieldKey, 1);
-    console.log('oldFormValues', oldFormValues);
 
     form.setFieldsValue(oldFormValues);
   };

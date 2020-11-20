@@ -11,6 +11,7 @@ import { COMMON_CONFIGS, getInputs, ComponentName } from '@/configs';
 import { deepClone, parseConfig, flatConfig, cleanEmptyValue } from '@/utils';
 import CodeMirror from '@/components/common/codemirror';
 import { renderConfigs } from '@/components/render-utils';
+import StartGuide from '@/components/start-guide';
 
 import styles from './index.less';
 
@@ -127,9 +128,12 @@ const ConfigForm = (props: ConfigFormProps) => {
 
   return (
     <>
+      {/* guide steps */}
+      <StartGuide />
       <Row style={{ padding: '5px' }}>
         <Col xs={24} sm={24}>
           <Alert
+            className="configTips"
             message={<FormattedMessage id="configs.tips" />}
             type="info"
             showIcon={true}
@@ -142,6 +146,7 @@ const ConfigForm = (props: ConfigFormProps) => {
           <Form
             {...FormLayout}
             form={form}
+            className="configForm"
             name="config"
             onFinish={onFinish}
             initialValues={initJs}
@@ -155,7 +160,7 @@ const ConfigForm = (props: ConfigFormProps) => {
               htmlType="submit"
               shape="round"
               size="large"
-              className={styles.submitButton}
+              className={`configButton ${styles.submitButton}`}
               icon={<SaveOutlined />}
             >
               {' '}
@@ -165,6 +170,7 @@ const ConfigForm = (props: ConfigFormProps) => {
         </Col>
         <Col xs={24} sm={24} md={24} lg={12}>
           <CodeMirror
+            className="configEditor"
             ref={codeEditorRef}
             code={code}
             onChange={onCodeChange}

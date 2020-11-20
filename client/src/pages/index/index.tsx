@@ -45,7 +45,6 @@ function ConfigPage({ hideOptional, component, dispatch }: PageProps) {
   const onSubmit = async (code: string) => {
     try {
       const res = await postConfig(code);
-      console.log(res);
       notification.success({
         message: 'Generate Serverless Config',
         description: (

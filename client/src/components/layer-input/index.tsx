@@ -13,8 +13,6 @@ const EnvInputs = (props: EnvInputsProps) => {
   const intl = useIntl();
   const { name, label, form } = props;
   const valNormalize = (value: any) => {
-    console.log('value', value);
-
     return +value;
   };
   return (

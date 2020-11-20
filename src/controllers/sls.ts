@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import fs from 'fs';
 import YAML from 'js-yaml';
+import { MIGRATE_METHOD_MAP, SupportComponents } from '@slsplus/migrate';
+import { isFrameworkComponent } from '@slsplus/migrate/dist/utils';
+import { typeOf } from '@ygkit/object';
 import { YAML_PATH } from '../config';
 
 /**
@@ -10,10 +13,19 @@ import { YAML_PATH } from '../config';
 export const init = (req: Request, res: Response): void => {
   if (fs.existsSync(YAML_PATH)) {
     const oldYaml = fs.readFileSync(YAML_PATH, 'utf-8');
+    const config = YAML.load(oldYaml);
+    const { component } = config;
+    let migrateMethod = MIGRATE_METHOD_MAP.framework;
+    if (!isFrameworkComponent(component)) {
+      migrateMethod = MIGRATE_METHOD_MAP[component as SupportComponents];
+    }
+    if (migrateMethod && typeOf(migrateMethod) === 'Function') {
+      config.inputs = migrateMethod(config.inputs);
+    }
     res.json({
       code: 0,
-      yaml: oldYaml,
-      js: YAML.load(oldYaml),
+      yaml: YAML.dump(config),
+      js: config,
     });
   } else {
     res.json({

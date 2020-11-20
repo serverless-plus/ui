@@ -3,7 +3,6 @@ import { GetConfigResponse, PostConfigResponse } from '../typings';
 
 const getConfig = async (): Promise<GetConfigResponse> => {
   const res = await request.get(`init`);
-  console.log(res.data);
   return res.data as GetConfigResponse;
 };
 

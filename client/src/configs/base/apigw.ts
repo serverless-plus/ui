@@ -62,6 +62,4 @@ const API_CONFIG = {
   },
 };
 
-console.log('APIGW_CONFIG', APIGW_CONFIG);
-
 export { BASE_APIGW_CONFIG, API_CONFIG, APIGW_CONFIG, API_METHODS };

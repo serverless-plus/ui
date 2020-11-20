@@ -32,7 +32,6 @@ const KeyValInput = (props: KeyValInputProps) => {
   const removeField = (fieldKey: number) => {
     const oldFormValues = form.getFieldsValue();
     oldFormValues[name].splice(fieldKey, 1);
-    console.log('oldFormValues', oldFormValues);
 
     form.setFieldsValue(oldFormValues);
   };

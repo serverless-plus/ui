@@ -55,8 +55,6 @@ const FormItem = (props: FormItemProps) => {
     dispatch,
     dependField,
   } = props;
-  console.log('+++++', props);
-
   const fieldItemChange = (v: any) => {
     // you can config `action` field for config parameter to dispatch global state
     if (action && dispatch) {

@@ -14,10 +14,10 @@ type Props = {
   [prodName: string]: any;
 };
 
-const CodeMirror = forwardRef(({ code, onChange }: Props, ref: any) => {
+const CodeMirror = forwardRef(({ code, onChange, className }: Props, ref: any) => {
   return (
     <UnControlled
-      className={styles.codeMirror}
+      className={className ? `${styles.codeMirror} ${className}` : styles.codeMirror}
       ref={ref}
       value={code}
       onBlur={onChange}
