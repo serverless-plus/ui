@@ -1,8 +1,9 @@
 import React, { ReactNode } from 'react';
 import { Layout, Switch, Tooltip } from 'antd';
-import { FormattedMessage, SelectLang } from 'umi';
+import { SelectLang } from 'umi';
 import { connect, Dispatch } from 'umi';
 import { ConnectState } from '@/models/connect';
+import { FormattedMessage } from '@/components/common/format-message';
 
 import styles from './index.less';
 

@@ -16,6 +16,14 @@ function isEmpty(val: any) {
   );
 }
 
+function isObject(val: any) {
+  return typeOf(val) === 'Object';
+}
+
+function isArray(val: any) {
+  return typeOf(val) === 'Array';
+}
+
 function cleanEmptyValue(obj: AnyObject) {
   const newObj: AnyObject = {};
   Object.entries(obj).forEach(([key, val]) => {
@@ -31,14 +39,37 @@ const deepClone = (obj: AnyObject) => {
 };
 
 const objectToDotProp = (key: string, val: any, prefix?: string) => {
+  const flatenArray = (arr: any[]) => {
+    return arr.map((item: AnyObject) => {
+      if (isObject(item)) {
+        const newItem: AnyObject = {};
+        const subKeyVals: AnyObject[] = [];
+        Object.entries(item).forEach(([subKey, subVal]) => {
+          subKeyVals.push(...objectToDotProp(subKey, subVal));
+        });
+        subKeyVals.forEach(item => {
+          newItem[item.key] = item.val;
+        });
+        return newItem;
+      } else {
+        return item;
+      }
+    });
+  };
+
   const newKey = prefix ? `${prefix}.${key}` : key;
   const keyVals = [];
-  if (typeOf(val) === 'Object') {
+  if (isObject(val)) {
     Object.entries(val).forEach(([subKey, subVal]) => {
       keyVals.push(...objectToDotProp(subKey, subVal, newKey));
     });
+  } else if (isArray(val)) {
+    val = flatenArray(val);
+    keyVals.push({
+      key: newKey,
+      val,
+    });
   } else {
-    const newKey = prefix ? `${prefix}.${key}` : key;
     keyVals.push({
       key: newKey,
       val,
@@ -47,8 +78,50 @@ const objectToDotProp = (key: string, val: any, prefix?: string) => {
   return keyVals;
 };
 
+/**
+ * flat nested property object to dot property
+ * eg: {"a":{"b":{"c":{"d":1}},"x":2}} => { 'a.b.c.d': 1, 'a.x': 2 }
+ *
+ * @param obj object
+ */
+const flatConfig = (obj: AnyObject) => {
+  const newObj: AnyObject = {};
+  Object.entries(obj).forEach(([key, val]) => {
+    if (isObject(val)) {
+      const keyVals = objectToDotProp(key, val);
+      keyVals.forEach(item => {
+        newObj[item.key] = item.val;
+      });
+    } else {
+      newObj[key] = val;
+    }
+  });
+
+  return newObj;
+};
+
 // { 'a.b.c.d': 1, 'a.x': 2 } => {"a":{"b":{"c":{"d":1}},"x":2}}
 const dotPropToObject = (key: string, val: any, obj: AnyObject = {}) => {
+  const parseDotArray = (arr: any[]) => {
+    return arr.map((item: AnyObject) => {
+      if (isObject(item)) {
+        const newItem: AnyObject = {};
+        Object.entries(item).forEach(([subKey, subVal]) => {
+          if (subKey.indexOf('.') !== -1) {
+            dotPropToObject(subKey, subVal, newItem);
+          } else {
+            newItem[subKey] = subVal;
+          }
+        });
+        return newItem;
+      } else {
+        return item;
+      }
+    });
+  };
+  if (isArray(val)) {
+    val = parseDotArray(val);
+  }
   const keyArr = key.split('.');
   if (!obj[keyArr[0]]) {
     obj[keyArr[0]] = {};
@@ -72,38 +145,37 @@ const dotPropToObject = (key: string, val: any, obj: AnyObject = {}) => {
  * @param obj object
  */
 const parseConfig = (obj: AnyObject) => {
-  const newObj: AnyObject = {};
+  let newObj: AnyObject = {};
 
-  Object.entries(obj).forEach(([key, val]) => {
-    if (key.indexOf('.') !== -1) {
-      dotPropToObject(key, val, newObj);
-    } else {
-      newObj[key] = val;
-    }
-  });
-  return newObj;
-};
+  if (isObject(obj)) {
+    Object.entries(obj).forEach(([key, val]) => {
+      if (key.indexOf('.') !== -1) {
+        dotPropToObject(key, val, newObj);
+      } else {
+        newObj[key] = val;
+      }
+    });
+  }
 
-/**
- * flat nested property object to dot property
- * eg: {"a":{"b":{"c":{"d":1}},"x":2}} => { 'a.b.c.d': 1, 'a.x': 2 }
- *
- * @param obj object
- */
-const flatConfig = (obj: AnyObject) => {
-  const newObj: AnyObject = {};
-  Object.entries(obj).forEach(([key, val]) => {
-    if (typeOf(val) === 'Object') {
-      const keyVals = objectToDotProp(key, val);
-      keyVals.forEach(item => {
-        newObj[item.key] = item.val;
-      });
-    } else {
-      newObj[key] = val;
-    }
-  });
+  if (isArray(obj)) {
+    console.log('array obj', obj);
+
+    newObj = [];
+    obj.forEach((item: AnyObject) => {
+      newObj.push(parseConfig(item));
+    });
+  }
 
   return newObj;
 };
 
-export { deepClone, dotPropToObject, parseConfig, flatConfig, cleanEmptyValue };
+export {
+  isObject,
+  isArray,
+  isEmpty,
+  deepClone,
+  dotPropToObject,
+  parseConfig,
+  flatConfig,
+  cleanEmptyValue,
+};

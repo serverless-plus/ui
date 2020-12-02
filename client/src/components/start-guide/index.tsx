@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Joyride, { CallBackProps, STATUS, Step } from 'react-joyride';
-import { FormattedMessage, useIntl } from 'umi';
+import { useIntl } from 'umi';
+import { FormattedMessage } from '@/components/common/format-message';
 
 const StartGuide = () => {
   const [steps] = useState([

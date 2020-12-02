@@ -1,12 +1,53 @@
 import { deepClone } from '@/utils';
 
+const RUNTIME_LIST = [
+  'Nodejs12.16',
+  'Nodejs10.15',
+  'Nodejs8.9',
+  'Nodejs6.10',
+  'Python3.6',
+  'Python2.7',
+  'PHP7',
+  'PHP5',
+  'Go1',
+  'Java8',
+  'CustomRuntime',
+];
+
+const MEMORY_LIST = [
+  64,
+  128,
+  256,
+  384,
+  512,
+  640,
+  768,
+  896,
+  1024,
+  1152,
+  1280,
+  1408,
+  1536,
+  1664,
+  1792,
+  1920,
+  2048,
+  2176,
+  2304,
+  2432,
+  2560,
+  2688,
+  2816,
+  2944,
+  3072,
+];
+
 const BASE_FAAS_CONFIG = {
   type: 'object',
   label: 'faas.options',
   divider: true,
   keys: {
     name: {
-      required: false,
       type: 'string',
       label: 'faas.name',
       ui: 'Input',
@@ -22,40 +63,14 @@ const BASE_FAAS_CONFIG = {
       label: 'faas.runtime',
       ui: 'Select',
       default: 'Nodejs10.15',
-      allows: ['Nodejs12.16', 'Nodejs10.15', 'Nodejs8.9', 'Nodejs6.10'],
+      allows: RUNTIME_LIST,
     },
     memorySize: {
       type: 'number',
       ui: 'Select',
       label: 'faas.memorySize',
       default: 128,
-      allows: [
-        64,
-        128,
-        256,
-        384,
-        512,
-        640,
-        768,
-        896,
-        1024,
-        1152,
-        1280,
-        1408,
-        1536,
-        1664,
-        1792,
-        1920,
-        2048,
-        2176,
-        2304,
-        2432,
-        2560,
-        2688,
-        2816,
-        2944,
-        3072,
-      ],
+      allows: MEMORY_LIST,
     },
     environment: {
       type: 'array',
@@ -73,14 +88,14 @@ const BASE_FAAS_CONFIG = {
       type: 'vpc',
       label: 'faas.vpc',
       // ui: 'VpcSelect',
-      dependField: 'inputs.region',
+      dependencies: 'inputs.region',
       ui: 'VpcInput',
       default: {},
     },
     publicAccess: {
       type: 'boolean',
       label: 'faas.publicAccess',
-      ui: 'Radio',
+      ui: 'Switch',
       allows: [
         {
           label: 'yes',
@@ -95,7 +110,7 @@ const BASE_FAAS_CONFIG = {
     eip: {
       type: 'boolean',
       label: 'faas.eip',
-      ui: 'Radio',
+      ui: 'Switch',
       allows: [
         {
           label: 'yes',
@@ -135,10 +150,15 @@ const BASE_FAAS_CONFIG = {
 };
 
 const FAAS_CONFIG = deepClone(BASE_FAAS_CONFIG);
+FAAS_CONFIG.keys.name.required = true;
+FAAS_CONFIG.keys.name.requiredMsg = 'faas.name.required';
+FAAS_CONFIG.keys.runtime.required = true;
+FAAS_CONFIG.keys.runtime.requiredMsg = 'faas.runtime.required';
+
 FAAS_CONFIG.keys.triggers = {
   type: 'array',
-  label: 'Trigger List',
-  ui: 'TriggerInputs',
+  label: 'faas.triggers',
+  ui: 'TriggerInput',
   default: [],
 };
 

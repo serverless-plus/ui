@@ -1,5 +1,21 @@
-import express from './express';
-import framework from './framework';
-import websocket from './websocket';
+import { AnyObject } from '@/typings';
+import * as framework from './framework';
+import * as websocket from './websocket';
+import * as scf from './scf';
+import * as website from './website';
 
-export { express, framework, websocket };
+const INPUTS: AnyObject = {
+  scf: scf.parameters,
+  website: website.parameters,
+  framework: framework.parameters,
+  websocket: websocket.parameters,
+};
+
+const DEFAULT_CONFIGS: AnyObject = {
+  scf: scf.defaultConfigs,
+  website: website.defaultConfigs,
+  framework: framework.defaultConfigs,
+  websocket: websocket.defaultConfigs,
+};
+
+export { INPUTS, DEFAULT_CONFIGS };

@@ -3,11 +3,13 @@ import { Tooltip, Form, Space, Input, Button, Modal, Select } from 'antd';
 import { InfoCircleOutlined, DeleteOutlined, PlusOutlined, EditOutlined } from '@ant-design/icons';
 import { FormInstance } from 'antd/lib/form';
 import { API_METHODS } from '@/configs/base/apigw';
+import { CDN_AREA } from '@/configs/base/cdn';
 
 type KeyValInputProps = {
   form: FormInstance;
   editForm?: ReactNode;
   editFormInstance?: FormInstance;
+  normalizeEditForm?: (v: any) => any;
   name: string;
   label?: string | ReactNode;
   keyField: string;
@@ -19,6 +21,7 @@ type KeyValInputProps = {
   buttonText?: string;
   editable?: boolean;
   isApi?: boolean;
+  isCdn?: boolean;
   valNormalize?: (val: any) => any;
 };
 
@@ -36,9 +39,11 @@ const KeyValInput = (props: KeyValInputProps) => {
     buttonText = 'Add',
     editable = false,
     isApi = false,
+    isCdn = false,
     form,
     editForm,
     editFormInstance,
+    normalizeEditForm,
   } = props;
 
   const [dialogShow, setDialogShow] = useState(false);
@@ -55,7 +60,14 @@ const KeyValInput = (props: KeyValInputProps) => {
   };
 
   const editFormSubmit = () => {
-    const current = editFormInstance?.getFieldsValue();
+    editFormInstance?.submit();
+    let current = editFormInstance?.getFieldsValue();
+    if (normalizeEditForm) {
+      current = normalizeEditForm(current);
+    }
+    console.log('current', current);
+
+
     const oldFormValues = form.getFieldsValue();
     oldFormValues[name][fieldKey] = current;
     form.setFieldsValue(oldFormValues);
@@ -116,6 +128,14 @@ const KeyValInput = (props: KeyValInputProps) => {
                         </Select.Option>
                       ))}
                     </Select>
+                  ) : isCdn ? (
+                    <Select placeholder="Method" style={{ width: '155px' }}>
+                      {CDN_AREA.map((item: string) => (
+                        <Select.Option key={item} value={item}>
+                          {item}
+                        </Select.Option>
+                      ))}
+                    </Select>
                   ) : (
                     <Input
                       placeholder={valPlaceholder}
@@ -152,7 +172,7 @@ const KeyValInput = (props: KeyValInputProps) => {
       </Form.List>
       {editable && (
         <Modal
-          title={`${label} config`}
+          title={`${label}`}
           visible={dialogShow}
           onOk={() => {
             editFormSubmit();

@@ -1,11 +1,17 @@
 export default {
   zh: {
+    unknown: 'Unknow',
     'navbar.title': 'Serverless Plus UI',
     'footer.sourceCode': '源码',
 
     generate: '生成',
     yes: '是',
     no: '否',
+
+    enable: '启用',
+    disable: '禁用',
+
+    required: '必填',
 
     'configs.tips':
       '点击 Command+s（Mac） 或者 Ctrl+s（Windows） 可以快速保存配置，最终保存内容将以 YAML 编辑器内容为准。',
@@ -17,12 +23,19 @@ export default {
     'framework.framework': '框架',
   },
   en: {
+    unknown: 'Unknow',
+
     'navbar.title': 'Serverless Plus UI',
     'footer.sourceCode': 'Source Code',
 
     generate: 'Generate',
     yes: 'Yes',
     no: 'No',
+
+    enable: 'Enable',
+    disable: 'Disable',
+
+    required: 'Required',
 
     'configs.tips':
       'Click Command+s(Mac) or Ctrl+s(Windows) can save config quickly, and the final content of yaml depends on YAML editor.',

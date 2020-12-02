@@ -10,7 +10,7 @@ type VpcSelectProps = {
   form: FormInstance;
   name: string;
   label?: string | ReactNode;
-  dependField: string;
+  dependFiled: string;
   [propName: string]: any;
 };
 
@@ -32,10 +32,10 @@ async function getSubList(region: string, vpcId: string) {
 }
 
 const VpcSelect = (props: VpcSelectProps) => {
-  const { form, name, label, global, dependField } = props;
-  const rg = form.getFieldValue(dependField);
+  const { form, name, label, global, dependFiled } = props;
+  const rg = form.getFieldValue(dependFiled);
   const vpcId = form.getFieldValue(`${name}.vpcId`);
-  const region = global[dependField] || rg;
+  const region = global[dependFiled] || rg;
   const [list, setList] = useState([]);
   const [subList, setSubList] = useState([]);
 

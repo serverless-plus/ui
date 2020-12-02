@@ -31,6 +31,7 @@ const ClsInput = (props: Props) => {
             <Input
               placeholder={intl.formatMessage({
                 id: 'faas.cls.topicId.input',
+                defaultMessage: '',
               })}
             />
           </Form.Item>

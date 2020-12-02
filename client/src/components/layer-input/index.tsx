@@ -29,6 +29,7 @@ const EnvInputs = (props: EnvInputsProps) => {
       valPlaceholder="Version"
       buttonText={intl.formatMessage({
         id: 'faas.layers.addBtn',
+        defaultMessage: 'Add',
       })}
     />
   );

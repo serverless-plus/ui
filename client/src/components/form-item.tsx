@@ -1,9 +1,9 @@
 import React from 'react';
-import { Select, Input, InputNumber, Form, Radio, Tooltip } from 'antd';
+import { Select, Input, InputNumber, Form, Radio, Tooltip, Switch } from 'antd';
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage } from '@/components/common/format-message';
 import { Rule } from 'rc-field-form/es/interface';
-import { connect, Dispatch } from 'umi';
+import { connect, Dispatch, useIntl } from 'umi';
 import { ConnectState } from '@/models/connect';
 import { FormInstance } from 'antd/lib/form';
 
@@ -16,8 +16,10 @@ import LayerInput from './layer-input';
 import CfsInput from './cfs-input';
 import ExcludeInput from './exclude-input';
 import ClsInput from './cls-input';
+import TriggerInput from './trigger-input';
+import CdnInput from './cdn-input';
 
-import { AnyObject } from './render-utils';
+import { AnyObject } from '@/typings';
 
 type FormItemProps = {
   type: string;
@@ -35,9 +37,13 @@ type FormItemProps = {
   action?: { type: string; key: string };
   onChange: (v: any, field: string) => void;
   dispatch?: Dispatch;
+  editable?: boolean;
+  clearable?: boolean;
+  requiredMsg?: string;
 };
 
 const FormItem = (props: FormItemProps) => {
+  const intl = useIntl();
   let component;
   const {
     name,
@@ -48,13 +54,21 @@ const FormItem = (props: FormItemProps) => {
     type,
     description,
     required = false,
+    requiredMsg = 'required',
     disabled = false,
     form,
     action,
     onChange,
     dispatch,
     dependField,
+    editable,
+    clearable = false,
   } = props;
+
+  const formatMessage = (id: string) => {
+    return intl.formatMessage({ id, defaultMessage: id });
+  };
+
   const fieldItemChange = (v: any) => {
     // you can config `action` field for config parameter to dispatch global state
     if (action && dispatch) {
@@ -79,7 +93,7 @@ const FormItem = (props: FormItemProps) => {
   if (required) {
     rules.push({
       required: true,
-      message: `Please input ${label}!`,
+      message: formatMessage(requiredMsg),
     } as Rule);
   }
   if (regex) {
@@ -89,18 +103,24 @@ const FormItem = (props: FormItemProps) => {
       message: `${label} is invalid!`,
     } as Rule);
   }
+  const deps = [];
+  if (dependField) {
+    deps.push(dependField);
+  }
 
   switch (ui) {
     case 'Input':
       component = (
         <Form.Item
           name={name}
-          label={<FormattedMessage id={label} />}
+          label={formatMessage(label)}
           rules={rules}
+          dependencies={deps}
           normalize={normalize}
         >
           <Input
             disabled={disabled}
+            allowClear={clearable}
             onChange={e => {
               fieldItemChange(e.target.value);
             }}
@@ -115,9 +135,27 @@ const FormItem = (props: FormItemProps) => {
         </Form.Item>
       );
       break;
+    case 'TextArea':
+      component = (
+        <Form.Item
+          name={name}
+          label={formatMessage(label)}
+          rules={rules}
+          dependencies={deps}
+          normalize={normalize}
+        >
+          <Input.TextArea
+            disabled={disabled}
+            onChange={e => {
+              fieldItemChange(e.target.value);
+            }}
+          />
+        </Form.Item>
+      );
+      break;
     case 'InputNumber':
       component = (
-        <Form.Item name={name} label={<FormattedMessage id={label} />} rules={rules}>
+        <Form.Item name={name} label={formatMessage(label)} rules={rules}>
           <InputNumber
             disabled={disabled}
             onChange={v => {
@@ -129,9 +167,10 @@ const FormItem = (props: FormItemProps) => {
       break;
     case 'Select':
       component = (
-        <Form.Item name={name} label={<FormattedMessage id={label} />} rules={rules}>
+        <Form.Item name={name} label={formatMessage(label)} rules={rules}>
           <Select
             disabled={disabled}
+            allowClear={clearable}
             onChange={v => {
               fieldItemChange(v);
             }}
@@ -147,7 +186,7 @@ const FormItem = (props: FormItemProps) => {
       break;
     case 'Radio':
       component = (
-        <Form.Item name={name} label={<FormattedMessage id={label} />}>
+        <Form.Item name={name} label={formatMessage(label)} rules={rules}>
           <Radio.Group
             onChange={e => {
               fieldItemChange(e.target.value);
@@ -162,9 +201,19 @@ const FormItem = (props: FormItemProps) => {
         </Form.Item>
       );
       break;
+    case 'Switch':
+      component = (
+        <Form.Item name={name} label={formatMessage(label)} rules={rules} valuePropName="checked">
+          <Switch
+            checkedChildren={<FormattedMessage id={allows[0].label} />}
+            unCheckedChildren={<FormattedMessage id={allows[1].label} />}
+          />
+        </Form.Item>
+      );
+      break;
     case 'MultiSelect':
       component = (
-        <Form.Item name={name} label={<FormattedMessage id={label} />}>
+        <Form.Item name={name} label={formatMessage(label)} rules={rules}>
           <Select
             mode="multiple"
             disabled={disabled}
@@ -182,50 +231,60 @@ const FormItem = (props: FormItemProps) => {
       );
       break;
     case 'EnvInput':
-      component = <EnvInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      component = <EnvInput name={name} label={formatMessage(label)} form={form} />;
       break;
     case 'ApiInput':
-      component = <ApiInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      component = (
+        <ApiInput name={name} label={formatMessage(label)} form={form} editable={editable} />
+      );
       break;
     case 'TagInput':
-      component = <TagInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      component = <TagInput name={name} label={formatMessage(label)} form={form} />;
       break;
     case 'VpcSelect':
       component = (
         <VpcSelect
           name={name}
-          label={<FormattedMessage id={label} />}
-          dependField={dependField}
+          label={formatMessage(label)}
+          dependencies={deps}
           form={form}
           onChange={onChange}
         />
       );
       break;
     case 'VpcInput':
-      component = <VpcInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      component = <VpcInput name={name} label={formatMessage(label)} form={form} />;
       break;
     case 'LayerInput':
-      component = <LayerInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      component = <LayerInput name={name} label={formatMessage(label)} form={form} />;
       break;
     case 'CfsInput':
-      component = <CfsInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      component = <CfsInput name={name} label={formatMessage(label)} form={form} />;
       break;
     case 'ExcludeInput':
-      component = <ExcludeInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      component = <ExcludeInput name={name} label={formatMessage(label)} form={form} />;
       break;
     case 'ClsInput':
-      component = <ClsInput name={name} label={<FormattedMessage id={label} />} form={form} />;
+      component = <ClsInput name={name} label={formatMessage(label)} form={form} />;
+      break;
+    case 'TriggerInput':
+      component = <TriggerInput name={name} label={formatMessage(label)} form={form} />;
+      break;
+    case 'CdnInput':
+      component = <CdnInput name={name} label={formatMessage(label)} form={form} />;
       break;
     default:
       component = (
         <Form.Item
           name={name}
-          label={<FormattedMessage id={label} />}
+          label={formatMessage(label)}
           rules={rules}
+          dependencies={deps}
           normalize={normalize}
         >
           <Input
             disabled={disabled}
+            allowClear={clearable}
             onChange={e => {
               fieldItemChange(e.target.value);
             }}
@@ -245,5 +304,5 @@ const FormItem = (props: FormItemProps) => {
 };
 
 export default connect(({ global }: ConnectState) => ({
-  region: global.region,
+  global,
 }))(FormItem);

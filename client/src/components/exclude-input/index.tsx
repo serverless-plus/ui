@@ -21,6 +21,7 @@ const ExcludeInput = (props: InputsProps) => {
       valTip="Exclude Items"
       buttonText={intl.formatMessage({
         id: 'app.src.exclude.addBtn',
+        defaultMessage: 'Add',
       })}
     />
   );

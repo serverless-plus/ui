@@ -36,6 +36,7 @@ const CfsInput = (props: InputsProps) => {
       editFormInstance={editForm}
       buttonText={intl.formatMessage({
         id: 'faas.cfs.addBtn',
+        defaultMessage: 'Add',
       })}
     />
   );

@@ -3,6 +3,8 @@ import app from './modules/app';
 import faas from './modules/faas';
 import apigw from './modules/apigw';
 import guide from './modules/guide';
+import website from './modules/website';
+import cdn from './modules/cdn';
 
 export default {
   // common
@@ -19,4 +21,10 @@ export default {
 
   // guide
   ...guide.en,
+
+  // website
+  ...website.en,
+
+  // cdn
+  ...cdn.en,
 };

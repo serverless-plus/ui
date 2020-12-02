@@ -1,7 +1,7 @@
 import React, { ReactNode, useEffect } from 'react';
 import { Form, Select, Row, Col } from 'antd';
 import { FormInstance } from 'antd/lib/form';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage } from '@/components/common/format-message';
 
 type ComposeSelectProps = {
   form: FormInstance;

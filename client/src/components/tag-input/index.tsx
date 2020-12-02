@@ -18,12 +18,13 @@ const EnvInputs = (props: InputsProps) => {
       form={form}
       label={label}
       name={name}
-      keyField="tagKey"
+      keyField="key"
       keyTip="Tag Key"
-      valField="tagVal"
+      valField="value"
       valTip="Tag Value"
       buttonText={intl.formatMessage({
         id: 'faas.tags.addBtn',
+        defaultMessage: 'Add',
       })}
     />
   );

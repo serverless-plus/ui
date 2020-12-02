@@ -5,9 +5,9 @@ import { SaveOutlined } from '@ant-design/icons';
 import YAML from 'js-yaml';
 import { Doc } from 'codemirror';
 import Hotkeys from 'hotkeys-js';
-import { FormattedMessage } from 'umi';
+import { FormattedMessage } from '@/components/common/format-message';
 
-import { COMMON_CONFIGS, getInputs, ComponentName } from '@/configs';
+import { COMMON_CONFIGS, getInputs, getDefaultConfigs, ComponentName } from '@/configs';
 import { deepClone, parseConfig, flatConfig, cleanEmptyValue } from '@/utils';
 import CodeMirror from '@/components/common/codemirror';
 import { renderConfigs } from '@/components/render-utils';
@@ -60,13 +60,18 @@ const ConfigForm = (props: ConfigFormProps) => {
   const { onSubmit, hideOptional, initCompName, initYaml, initJs, ...restProps } = props;
   const [form] = Form.useForm();
   const [code, setCode] = useState(initYaml);
-  const [componentConfig, setComponentConfig] = useState(getInputs(initCompName as ComponentName));
+  const [componentParameters, setComponentParameters] = useState(
+    getInputs(initCompName as ComponentName),
+  );
   const codeEditorRef = useRef(null);
 
   useEffect(() => {
-    const curComponent = getInputs(initCompName as ComponentName);
+    const curParameters = getInputs(initCompName as ComponentName);
+    const curDefaultConfigs = getDefaultConfigs(initCompName as ComponentName);
 
-    setComponentConfig(curComponent);
+    setComponentParameters(curParameters);
+    setCode(curDefaultConfigs.yaml);
+    form.setFieldsValue(curDefaultConfigs.js);
   }, [initCompName]);
 
   useEffect(() => {
@@ -104,6 +109,7 @@ const ConfigForm = (props: ConfigFormProps) => {
 
   const onFinish = async (values: any) => {
     const jsCode = parseConfig(cleanEmptyValue(deepClone(values)));
+
     const yamlCode = YAML.dump(jsCode);
 
     setCode(yamlCode);
@@ -154,7 +160,7 @@ const ConfigForm = (props: ConfigFormProps) => {
             scrollToFirstError
           >
             {renderConfigs({ parameters: COMMON_CONFIGS, form, hideOptional })}
-            {renderConfigs({ parameters: componentConfig, form, hideOptional })}
+            {renderConfigs({ parameters: componentParameters, form, hideOptional })}
             <Button
               type="primary"
               htmlType="submit"

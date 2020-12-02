@@ -1,4 +1,4 @@
-import { InitConfig } from './typings';
+import { InitConfig } from '@/typings';
 
 const DEFAULT_CONFIG: InitConfig = {
   js: {
@@ -21,6 +21,7 @@ const DEFAULT_CONFIG: InitConfig = {
   yaml: `component: framework
 name: framework-demo
 inputs:
+  framework: express
   src:
     src: ./
   region: ap-guangzhou
@@ -39,7 +40,7 @@ inputs:
         method: ANY`,
 };
 
-const COMPONENT_LIST = ['express', 'framework', 'websocket'];
+const COMPONENT_LIST = ['framework', 'scf', 'website', 'websocket'];
 
 const COMMON_CONFIGS = {
   component: {

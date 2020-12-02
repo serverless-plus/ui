@@ -18,12 +18,13 @@ const EnvInputs = (props: InputsProps) => {
       form={form}
       label={label}
       name={name}
-      keyField="envKey"
+      keyField="key"
       keyTip="Environment Variable Key"
-      valField="envVal"
+      valField="value"
       valTip="Environment Variable Value"
       buttonText={intl.formatMessage({
         id: 'faas.environments.addBtn',
+        defaultMessage: 'Add',
       })}
     />
   );

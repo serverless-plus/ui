@@ -27,6 +27,7 @@
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
     "@types/react-test-renderer": "^16.0.3",
+    "@types/redux-logger": "^3.0.8",
     "@umijs/preset-react": "^1.6.19",
     "babel-eslint": "^9.0.0",
     "dva-logger": "^1.0.0",
